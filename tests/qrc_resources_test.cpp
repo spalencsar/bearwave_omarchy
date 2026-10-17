@@ -27,6 +27,7 @@ void QrcResourcesTest::qmlModulesAreEmbedded()
     QVERIFY(QFile::exists(QStringLiteral(":/qml/components/SidebarNavigation.qml")));
     QVERIFY(QFile::exists(QStringLiteral(":/qml/components/StationDetailPanel.qml")));
     QVERIFY(QFile::exists(QStringLiteral(":/assets/app/bearwave.svg")));
+    QVERIFY(QFile::exists(QStringLiteral(":/assets/app/bearwave-symbolic.svg")));
     QVERIFY(QFile::exists(QStringLiteral(":/assets/app/bearwave.png")));
     QFile changelog(QStringLiteral(":/CHANGELOG.md"));
     QVERIFY(changelog.open(QIODevice::ReadOnly));

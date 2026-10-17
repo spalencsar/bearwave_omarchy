@@ -42,10 +42,10 @@ void SystemTrayManager::setupTrayIcon()
 {
     m_trayIcon = new QSystemTrayIcon(this);
 
-    QIcon icon(QStringLiteral(":/assets/app/bearwave.svg"));
+    QIcon icon = QIcon::fromTheme(QStringLiteral("de.nerdbear.bearwave-symbolic"),
+                                 QIcon(QStringLiteral(":/assets/app/bearwave-symbolic.svg")));
     if (icon.isNull()) {
-        icon = QIcon::fromTheme(QStringLiteral("de.nerdbear.bearwave"),
-                                QIcon::fromTheme(QStringLiteral("multimedia-player")));
+        icon = QIcon::fromTheme(QStringLiteral("multimedia-player"));
     }
     m_trayIcon->setIcon(icon);
     m_trayIcon->setToolTip(tr("BearWave"));

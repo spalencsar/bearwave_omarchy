@@ -229,7 +229,7 @@ QVariantMap MprisPlayerAdaptor::metadata() const
     const QString coverUrl = p->currentCoverArtUrl();
     const QString streamUrl = m_backend ? m_backend->currentStationUrl() : QString();
 
-    map.insert(QStringLiteral("mpris:trackid"), QVariant::fromValue(QDBusObjectPath(QStringLiteral("/org/kde/bearwave/track/0"))));
+    map.insert(QStringLiteral("mpris:trackid"), QVariant::fromValue(QDBusObjectPath(QStringLiteral("/de/nerdbear/bearwave/track/0"))));
     if (!station.isEmpty()) {
         map.insert(QStringLiteral("xesam:album"), station);
     }

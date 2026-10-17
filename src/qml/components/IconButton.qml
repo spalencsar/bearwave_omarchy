@@ -18,7 +18,7 @@ Button {
         if (!control.enabled)
             return BearTheme.textMuted
         if (control.accentFill)
-            return "#ffffff"
+            return BearTheme.onAccent
         if (control.highlighted || control.down)
             return BearTheme.accent
         return BearTheme.textMain
@@ -40,18 +40,18 @@ Button {
     }
 
     background: Rectangle {
-        radius: control.round ? width / 2 : 14
+        radius: control.round && !BearTheme.isOmarchy ? width / 2 : BearTheme.cornerRadius
         color: {
             if (control.accentFill)
-                return control.down ? "#c93a68"
-                       : (control.hovered ? "#ff6a9a" : BearTheme.accent)
+                return control.down ? Qt.darker(BearTheme.accent, 1.22)
+                       : (control.hovered ? Qt.lighter(BearTheme.accent, 1.12) : BearTheme.accent)
             if (control.flat && !control.hovered && !control.highlighted && !control.down)
                 return "transparent"
             if (control.highlighted || control.down)
-                return BearTheme.isLight ? "#ffe4ee" : "#2a2430"
+                return BearTheme.controlActive
             if (control.hovered)
                 return BearTheme.cardHover
-            return BearTheme.isLight ? "#ebebf0" : "#1a1a1e"
+            return BearTheme.control
         }
         border.width: control.visualFocus ? 1.5 : (control.highlighted && !control.accentFill ? 1 : 0)
         border.color: control.visualFocus || control.highlighted ? BearTheme.accent : "transparent"

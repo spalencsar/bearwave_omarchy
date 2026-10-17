@@ -27,13 +27,13 @@ Dialog {
 
     background: Rectangle {
         color: BearTheme.panel
-        radius: 14
+        radius: BearTheme.cornerRadius
         border.color: BearTheme.cardBorder
         border.width: 1
     }
 
     Overlay.modal: Rectangle {
-        color: BearTheme.isLight ? "#66000000" : "#99000000"
+        color: BearTheme.scrim
     }
 
     function findCountryIndex(countryName) {
@@ -174,8 +174,8 @@ Dialog {
                     valueRole: "code"
                     font.pixelSize: 14
                     background: Rectangle {
-                        radius: 10
-                        color: BearTheme.isLight ? "#f0f0f3" : "#1a1a1e"
+                        radius: BearTheme.cornerRadius
+                        color: BearTheme.control
                         border.width: countryCombo.activeFocus || countryCombo.popup.visible ? 1.5 : 1
                         border.color: (countryCombo.activeFocus || countryCombo.popup.visible)
                                       ? BearTheme.accent : BearTheme.cardBorder
@@ -196,7 +196,7 @@ Dialog {
                         padding: 6
                         background: Rectangle {
                             color: BearTheme.panel
-                            radius: 10
+                            radius: BearTheme.cornerRadius
                             border.color: BearTheme.cardBorder
                             border.width: 1
                         }
@@ -224,7 +224,7 @@ Dialog {
                             color: parent.highlighted
                                    ? BearTheme.selection
                                    : (parent.hovered ? BearTheme.cardHover : "transparent")
-                            radius: 6
+                            radius: BearTheme.smallRadius
                         }
                     }
                 }
@@ -301,8 +301,8 @@ Dialog {
         topPadding: 10
         bottomPadding: 10
         background: Rectangle {
-            radius: 10
-            color: BearTheme.isLight ? "#f0f0f3" : "#1a1a1e"
+            radius: BearTheme.cornerRadius
+            color: BearTheme.control
             border.width: field.activeFocus ? 1.5 : 1
             border.color: field.activeFocus ? BearTheme.accent : BearTheme.cardBorder
         }

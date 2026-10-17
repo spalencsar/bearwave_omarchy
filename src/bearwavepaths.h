@@ -10,10 +10,8 @@
 #include <QStandardPaths>
 #include <QString>
 
-// XDG-aware config/cache roots so Flatpak can persist under
-// ~/.var/app/<app-id>/… without --filesystem overrides.
-// Native installs keep ~/.config/bearwave and ~/.cache/bearwave when
-// XDG_*_HOME are unset.
+// XDG-aware config/cache roots. On Omarchy these resolve to
+// ~/.config/bearwave and ~/.cache/bearwave unless XDG_*_HOME is set.
 
 namespace BearwavePaths {
 
@@ -51,7 +49,7 @@ inline QString apiCacheDir()
 
 // One-shot copy of favorites/state/my_stations from the legacy host path
 // (~/.config/bearwave) when the XDG dir is empty and the legacy dir is readable
-// (e.g. native upgrade, or Flatpak with an old override).
+// (for example after upgrading from an older native build).
 inline void maybeMigrateLegacyConfig()
 {
     const QString target = configDir();

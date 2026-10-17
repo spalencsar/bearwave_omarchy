@@ -13,7 +13,8 @@ Rectangle {
     required property var app
 
     color: BearTheme.sidebar
-    border.width: 0
+    border.width: BearTheme.isOmarchy ? 1 : 0
+    border.color: BearTheme.cardBorder
     radius: 0
 
     Rectangle {
@@ -23,6 +24,7 @@ Rectangle {
         width: 1
         color: BearTheme.cardBorder
         opacity: 0.55
+        visible: !BearTheme.isOmarchy
     }
 
     function showTop() {
@@ -105,6 +107,26 @@ Rectangle {
                 fillMode: Image.PreserveAspectFit
                 smooth: true
                 mipmap: true
+                visible: !BearTheme.isOmarchy
+            }
+
+            Column {
+                anchors.left: parent.left
+                anchors.verticalCenter: parent.verticalCenter
+                spacing: 1
+                visible: BearTheme.isOmarchy
+
+                Label {
+                    text: "◉ BearWave"
+                    color: BearTheme.textMain
+                    font.pixelSize: 15
+                    font.bold: true
+                }
+                Label {
+                    text: qsTr("internet radio")
+                    color: BearTheme.textMuted
+                    font.pixelSize: 10
+                }
             }
         }
 
@@ -255,7 +277,7 @@ Rectangle {
         Rectangle {
             id: bg
             anchors.fill: parent
-            radius: 10
+            radius: BearTheme.cornerRadius
             color: row.active
                    ? BearTheme.selection
                    : (rowMouse.containsMouse ? BearTheme.cardHover : "transparent")
@@ -299,11 +321,11 @@ Rectangle {
                     anchors.centerIn: parent
                     width: 26
                     height: 20
-                    radius: 5
+                    radius: BearTheme.smallRadius
                     visible: row.code.length > 0
                     color: row.active
-                           ? (BearTheme.isLight ? "#ffe4ee" : "#2a2430")
-                           : (BearTheme.isLight ? "#e4e4ea" : "#1a1a1e")
+                           ? BearTheme.controlActive
+                           : BearTheme.control
                     border.color: row.active ? BearTheme.accent : "transparent"
                     border.width: row.active ? 1 : 0
 
@@ -331,10 +353,10 @@ Rectangle {
                 visible: row.badge > 0
                 height: 20
                 width: Math.max(20, badgeLabel.implicitWidth + 10)
-                radius: 10
+                radius: BearTheme.smallRadius
                 color: row.active
-                       ? (BearTheme.isLight ? "#ffd6e6" : "#32323a")
-                       : (BearTheme.isLight ? "#e4e4ea" : "#1c1c20")
+                       ? BearTheme.controlActive
+                       : BearTheme.controlHover
 
                 Label {
                     id: badgeLabel

@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "de.nerdbear.bearwave",
+  "name": "BearWave",
+  "version": "1.3.0",
+  "author": "Sebastian Palencsar",
+  "license": "GPL-3.0-or-later",
+  "description": "Omarchy-native internet radio with a theme-aware bar control.",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "omarchy/BarWidget.qml"
+  },
+  "barWidget": {
+    "displayName": "BearWave",
+    "description": "Launch and control the BearWave internet-radio player from the Omarchy bar.",
+    "category": "Audio",
+    "aliases": [
+      "radio",
+      "music",
+      "stream"
+    ],
+    "allowMultiple": false,
+    "defaultSection": "right"
+  }
+}

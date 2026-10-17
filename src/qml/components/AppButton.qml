@@ -6,7 +6,7 @@ import QtQuick.Controls 2.15
 
 import theme 1.0
 
-// Soft chip button — flatter than stock Fusion/KDE toolbuttons.
+// Compact outlined control for the Omarchy interface.
 Button {
     id: control
 
@@ -35,18 +35,19 @@ Button {
     }
 
     background: Rectangle {
-        radius: 16
+        radius: BearTheme.cornerRadius
         color: {
             if (control.flat && !control.hovered && !control.highlighted && !control.down)
                 return "transparent"
             if (control.highlighted || control.down)
-                return BearTheme.isLight ? "#ffe4ee" : "#2a2430"
+                return BearTheme.controlActive
             if (control.hovered)
                 return BearTheme.cardHover
-            return BearTheme.isLight ? "#ebebf0" : "#1a1a1e"
+            return BearTheme.control
         }
-        border.width: control.visualFocus ? 1.5 : (control.highlighted ? 1 : 0)
-        border.color: control.visualFocus || control.highlighted ? BearTheme.accent : "transparent"
+        border.width: control.visualFocus ? 1.5 : ((BearTheme.isOmarchy || control.highlighted) ? 1 : 0)
+        border.color: control.visualFocus || control.highlighted ? BearTheme.accent
+                                                               : (BearTheme.isOmarchy ? BearTheme.cardBorder : "transparent")
         opacity: control.enabled ? 1.0 : 0.5
     }
 }

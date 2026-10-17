@@ -102,7 +102,7 @@ Item {
                 anchors.fill: parent
                 clip: true
                 // Gap between cards — no shared edge with the stage panel.
-                spacing: 10
+                spacing: BearTheme.isOmarchy ? 0 : 10
                 model: app.activeModel()
                 visible: count > 0 && !root.showEmptyState
                 boundsBehavior: Flickable.StopAtBounds

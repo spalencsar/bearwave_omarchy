@@ -104,6 +104,36 @@ target_link_libraries(appsettings_test PRIVATE Qt6::Core Qt6::Test)
 
 add_test(NAME appsettings_test COMMAND appsettings_test)
 
+add_executable(desktop_environment_test
+    desktop_environment_test.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../src/desktopenvironment.cpp
+)
+
+target_include_directories(desktop_environment_test PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/../src
+)
+
+target_link_libraries(desktop_environment_test PRIVATE Qt6::Core Qt6::Test)
+
+add_test(NAME desktop_environment_test COMMAND desktop_environment_test)
+
+add_executable(omarchy_theme_controller_test
+    omarchy_theme_controller_test.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../src/omarchythemecontroller.cpp
+)
+
+target_include_directories(omarchy_theme_controller_test PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/../src
+)
+
+target_link_libraries(omarchy_theme_controller_test PRIVATE
+    Qt6::Core
+    Qt6::Gui
+    Qt6::Test
+)
+
+add_test(NAME omarchy_theme_controller_test COMMAND omarchy_theme_controller_test)
+
 add_executable(station_image_cache_test
     station_image_cache_test.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../src/stationimagecache.cpp

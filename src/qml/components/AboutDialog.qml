@@ -150,7 +150,7 @@ Dialog {
 
                         Label {
                             Layout.fillWidth: true
-                            text: qsTr("Qt 6 app for Linux — works across desktop environments.")
+                            text: qsTr("Native Qt 6 internet radio for Omarchy and Hyprland.")
                             color: BearTheme.textMuted
                             font.pixelSize: 12
                             wrapMode: Text.WordWrap
@@ -227,34 +227,10 @@ Dialog {
                         color: BearTheme.cardBorder
                     }
 
-                    RowLayout {
-                        Layout.fillWidth: true
-                        spacing: 8
-
-                        SocialButton {
-                            iconSource: "qrc:/assets/ui/globe.svg"
-                            tooltipText: qsTr("Open website")
-                            targetUrl: "https://palencsar.pro"
-                        }
-                        SocialButton {
-                            iconSource: "qrc:/assets/ui/github.svg"
-                            tooltipText: qsTr("Open GitHub")
-                            targetUrl: "https://github.com/spalencsar"
-                        }
-                        SocialButton {
-                            iconSource: "qrc:/assets/ui/linkedin.svg"
-                            tooltipText: qsTr("Open LinkedIn")
-                            targetUrl: "https://www.linkedin.com/in/spalencsar/"
-                        }
-
-                        Item {
-                            Layout.fillWidth: true
-                        }
-
-                        AppButton {
-                            text: qsTr("What's New")
-                            onClicked: root.showingChangelog = true
-                        }
+                    AppButton {
+                        Layout.alignment: Qt.AlignRight
+                        text: qsTr("What's New")
+                        onClicked: root.showingChangelog = true
                     }
                 }
             }
@@ -364,39 +340,6 @@ Dialog {
                     }
                 }
             }
-        }
-    }
-
-    component SocialButton: ToolButton {
-        id: socialButton
-
-        required property string iconSource
-        required property string tooltipText
-        required property string targetUrl
-
-        Layout.preferredWidth: 36
-        Layout.preferredHeight: 36
-        focusPolicy: Qt.NoFocus
-        onClicked: Qt.openUrlExternally(targetUrl)
-        ToolTip.visible: hovered
-        ToolTip.text: tooltipText
-
-        contentItem: Item {
-            Image {
-                anchors.centerIn: parent
-                width: 17
-                height: 17
-                source: socialButton.iconSource
-                fillMode: Image.PreserveAspectFit
-                smooth: true
-            }
-        }
-
-        background: Rectangle {
-            radius: 7
-            color: socialButton.hovered ? BearTheme.cardHover : BearTheme.imageWell
-            border.color: socialButton.hovered ? BearTheme.accent : BearTheme.cardBorder
-            border.width: 1
         }
     }
 

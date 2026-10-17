@@ -35,7 +35,7 @@ Rectangle {
                                              faviconUrl, homepageUrl)
     }
 
-    radius: 6
+    radius: BearTheme.smallRadius
     clip: true
     color: BearTheme.imageWell
     border.color: BearTheme.cardBorder

@@ -31,11 +31,9 @@
     </qresource>
     <qresource prefix="/">
         <file alias="assets/app/bearwave.svg">../assets/app/bearwave.svg</file>
+        <file alias="assets/app/bearwave-symbolic.svg">../assets/app/bearwave-symbolic.svg</file>
         <file alias="assets/app/bearwave.png">../assets/app/bearwave.png</file>
         <file alias="assets/app/bearwave_line.png">../assets/app/bearwave_line.png</file>
-        <file alias="assets/ui/globe.svg">../assets/ui/globe.svg</file>
-        <file alias="assets/ui/github.svg">../assets/ui/github.svg</file>
-        <file alias="assets/ui/linkedin.svg">../assets/ui/linkedin.svg</file>
         <file alias="CHANGELOG.md">../CHANGELOG.md</file>
     </qresource>
 </RCC>

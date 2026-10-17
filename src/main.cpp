@@ -9,6 +9,7 @@
 #include <QDBusMessage>
 #include <QDebug>
 #include <QFile>
+#include <QFont>
 #include <QHash>
 #include <QIcon>
 #include <QLocale>
@@ -19,28 +20,20 @@
 #include <QStyleHints>
 #include <QTranslator>
 
+#include <memory>
+
 #include "appsettings.h"
 #include "radiobackend.h"
 #include "mprisadaptor.h"
 #include "bearwavecontroladaptor.h"
 #include "notificationmanager.h"
 #include "systemtraymanager.h"
-#include "colorschemecontroller.h"
+#include "desktopenvironment.h"
+#include "omarchythemecontroller.h"
 
 namespace {
-bool isPlasmaDesktopSession()
+void configureOmarchyChrome()
 {
-    const QString desktop = QString::fromLocal8Bit(qgetenv("XDG_CURRENT_DESKTOP")).toLower();
-    return desktop.contains(QLatin1String("kde")) || desktop.contains(QLatin1String("plasma"));
-}
-
-// On non-KDE desktops avoid inheriting a KDE/Breeze platform theme so the app
-// does not look like a "KDE guest".
-void configureNonPlasmaChrome()
-{
-    if (isPlasmaDesktopSession()) {
-        return;
-    }
     if (qEnvironmentVariableIsEmpty("QT_QUICK_CONTROLS_STYLE")) {
         qputenv("QT_QUICK_CONTROLS_STYLE", "Fusion");
     }
@@ -53,14 +46,14 @@ void configureNonPlasmaChrome()
 
 int main(int argc, char *argv[])
 {
-    configureNonPlasmaChrome();
+    const DesktopEnvironment::Type desktop = DesktopEnvironment::detect();
+    configureOmarchyChrome();
 
     QApplication app(argc, argv);
 
-    // Must run before any QML is loaded (non-Plasma only).
-    if (!isPlasmaDesktopSession()
-        && (qEnvironmentVariableIsEmpty("QT_QUICK_CONTROLS_STYLE")
-            || qEnvironmentVariable("QT_QUICK_CONTROLS_STYLE") == QLatin1String("Fusion"))) {
+    // Must run before any QML is loaded.
+    if (qEnvironmentVariableIsEmpty("QT_QUICK_CONTROLS_STYLE")
+        || qEnvironmentVariable("QT_QUICK_CONTROLS_STYLE") == QLatin1String("Fusion")) {
         QQuickStyle::setStyle(QStringLiteral("Fusion"));
     }
 
@@ -68,6 +61,14 @@ int main(int argc, char *argv[])
     QApplication::setDesktopFileName(QStringLiteral("de.nerdbear.bearwave"));
     QApplication::setOrganizationName(QStringLiteral("BearWave"));
     QApplication::setApplicationVersion(QStringLiteral(BEARWAVE_VERSION));
+    if (desktop == DesktopEnvironment::Type::Omarchy) {
+        QFont omarchyFont(QStringLiteral("monospace"));
+        omarchyFont.setStyleHint(QFont::Monospace);
+        app.setFont(omarchyFont);
+    }
+    app.setProperty("desktopEnvironment", DesktopEnvironment::name(desktop));
+    qInfo().noquote() << QStringLiteral("Desktop environment: %1")
+                             .arg(DesktopEnvironment::name(desktop));
 
     QCommandLineParser commandLine;
     commandLine.setApplicationDescription(QStringLiteral("Desktop internet radio player"));
@@ -78,6 +79,10 @@ int main(int argc, char *argv[])
         QStringLiteral("Temporarily override UI and country-name language: system, de, en, nl, or ru"),
         QStringLiteral("language"));
     commandLine.addOption(languageOption);
+    const QCommandLineOption noTrayOption(
+        QStringLiteral("no-tray"),
+        QStringLiteral("Disable the system tray icon (used by the Omarchy bar plugin)"));
+    commandLine.addOption(noTrayOption);
     commandLine.process(app);
 
     AppSettings appSettings;
@@ -139,7 +144,7 @@ int main(int argc, char *argv[])
     engine.addImportPath(QStringLiteral("qrc:/qml"));
 
     RadioBackend backend;
-    ColorSchemeController colorScheme;
+    OmarchyThemeController omarchyTheme(desktop == DesktopEnvironment::Type::Omarchy);
     QFile changelogFile(QStringLiteral(":/CHANGELOG.md"));
     QString changelogText;
     if (changelogFile.open(QIODevice::ReadOnly)) {
@@ -150,8 +155,11 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("bearwaveVersion", QStringLiteral(BEARWAVE_VERSION));
     engine.rootContext()->setContextProperty("bearwaveBuildId", QStringLiteral(BEARWAVE_GIT_HASH));
     engine.rootContext()->setContextProperty("bearwaveChangelog", changelogText);
-    // Light/dark: portal / gsettings / optional shell session (ColorSchemeController).
-    engine.rootContext()->setContextProperty(QStringLiteral("bearwaveColorScheme"), &colorScheme);
+    engine.rootContext()->setContextProperty(
+        QStringLiteral("bearwaveDesktopEnvironment"), DesktopEnvironment::name(desktop));
+    engine.rootContext()->setContextProperty(
+        QStringLiteral("bearwaveIsOmarchy"), desktop == DesktopEnvironment::Type::Omarchy);
+    engine.rootContext()->setContextProperty(QStringLiteral("bearwaveOmarchyTheme"), &omarchyTheme);
     auto *mprisRoot = new MprisRootAdaptor(&backend, &app);
     auto *mprisPlayer = new MprisPlayerAdaptor(&backend);
     auto *controlAdaptor = new BearWaveControlAdaptor(&backend);
@@ -200,8 +208,10 @@ int main(int argc, char *argv[])
     mainWindow->raise();
     mainWindow->requestActivate();
 
-    SystemTrayManager trayManager(&backend, mainWindow, &app);
-    Q_UNUSED(trayManager)
+    std::unique_ptr<SystemTrayManager> trayManager;
+    if (!commandLine.isSet(noTrayOption)) {
+        trayManager = std::make_unique<SystemTrayManager>(&backend, mainWindow, &app);
+    }
 
     return app.exec();
 }

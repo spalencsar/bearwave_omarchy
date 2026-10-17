@@ -18,7 +18,7 @@ Rectangle {
 
     width: listWidth
     height: compactMode ? 72 : 70
-    radius: 12
+    radius: BearTheme.cornerRadius
 
     readonly property bool isCurrent: {
         if (!app.backend || !modelData) return false
@@ -67,7 +67,7 @@ Rectangle {
             return cardMouse.containsMouse ? BearTheme.selectionHover : BearTheme.selection
         if (cardMouse.containsMouse)
             return BearTheme.cardHover
-        return BearTheme.isLight ? "#fafafb" : "#121214"
+        return BearTheme.card
     }
     // Avoid a full-width “box outline” that collides with the right stage edge:
     // idle cards = no border; selected = soft; current/playing = accent.
@@ -172,7 +172,7 @@ Rectangle {
             faviconUrl: root.modelData.favicon || ""
             homepageUrl: root.modelData.homepage || ""
             logoMargin: 2
-            radius: 10
+            radius: BearTheme.smallRadius
         }
 
         ColumnLayout {
@@ -241,6 +241,7 @@ Rectangle {
             Flow {
                 Layout.fillWidth: true
                 spacing: 6
+                visible: !BearTheme.isOmarchy
 
                 MetaChip {
                     visible: root.countryText.length > 0
@@ -267,6 +268,22 @@ Rectangle {
                              && root.primaryTag.length === 0
                     text: qsTr("Stream")
                 }
+            }
+
+            Label {
+                Layout.fillWidth: true
+                visible: BearTheme.isOmarchy
+                text: {
+                    var parts = []
+                    if (root.countryText.length > 0) parts.push(root.countryText)
+                    if (root.primaryTag.length > 0) parts.push(root.primaryTag)
+                    if (root.codecText.length > 0) parts.push(root.codecText)
+                    if (root.bitrateValue > 0) parts.push(root.bitrateValue + " kbps")
+                    return parts.length > 0 ? parts.join("  ·  ") : qsTr("Stream")
+                }
+                color: BearTheme.textMuted
+                font.pixelSize: 11
+                elide: Text.ElideRight
             }
         }
 
@@ -361,7 +378,7 @@ Rectangle {
         width: chipLabel.implicitWidth + 12
         radius: 6
         color: filled ? BearTheme.accent
-               : (BearTheme.isLight ? "#ececf0" : "#1a1a1e")
+               : BearTheme.control
         border.width: filled ? 0 : 1
         border.color: BearTheme.cardBorder
 
@@ -369,7 +386,7 @@ Rectangle {
             id: chipLabel
             anchors.centerIn: parent
             text: parent.text
-            color: parent.filled ? "#ffffff" : BearTheme.textMuted
+            color: parent.filled ? BearTheme.onAccent : BearTheme.textMuted
             font.pixelSize: 10
             font.bold: parent.filled
         }

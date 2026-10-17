@@ -22,7 +22,7 @@ Popup {
     }
 
     background: Rectangle {
-        radius: 10
+        radius: BearTheme.cornerRadius
         color: BearTheme.panelAlt
         border.color: BearTheme.accent
     }

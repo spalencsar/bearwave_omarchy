@@ -186,7 +186,7 @@ Rectangle {
                 Rectangle {
                     height: 22
                     width: statusChipLabel.implicitWidth + 14
-                    radius: 11
+                    radius: BearTheme.cornerRadius
                     color: "transparent"
                     border.color: root.statusColor()
                     border.width: 1
@@ -210,7 +210,7 @@ Rectangle {
                                         ? Math.min(width * 0.55, 160)
                                         : width
                 Layout.maximumHeight: root.compactStage ? 160 : 400
-                radius: root.compactStage ? 12 : 16
+                radius: BearTheme.cornerRadius
                 color: BearTheme.imageWell
                 border.color: BearTheme.cardBorder
                 border.width: 1
@@ -222,7 +222,7 @@ Rectangle {
                     gradient: Gradient {
                         GradientStop {
                             position: 0.0
-                            color: BearTheme.isLight ? "#12ff4f86" : "#18000000"
+                            color: BearTheme.alpha(BearTheme.accent, BearTheme.isLight ? 0.07 : 0.10)
                         }
                         GradientStop {
                             position: 1.0
@@ -242,7 +242,7 @@ Rectangle {
                     homepageUrl: root.homepage
                     logoMargin: 0
                     visible: !coverImage.visible
-                    radius: 12
+                    radius: BearTheme.cornerRadius
                 }
 
                 Image {
@@ -334,7 +334,7 @@ Rectangle {
             Rectangle {
                 Layout.fillWidth: true
                 implicitHeight: currentTrackCol.implicitHeight + 24
-                radius: 14
+                radius: BearTheme.cornerRadius
                 color: BearTheme.card
                 border.color: root.hasTrackInfo ? BearTheme.accent : BearTheme.cardBorder
                 border.width: root.hasTrackInfo ? 1.5 : 1
@@ -406,8 +406,8 @@ Rectangle {
             Rectangle {
                 Layout.fillWidth: true
                 implicitHeight: previousTrackCol.implicitHeight + 22
-                radius: 14
-                color: BearTheme.isLight ? "#f3f3f6" : "#101012"
+                radius: BearTheme.cornerRadius
+                color: BearTheme.panel
                 border.color: BearTheme.cardBorder
                 border.width: 1
                 visible: root.previousTrack !== null
@@ -515,8 +515,8 @@ Rectangle {
                         required property string modelData
                         height: 22
                         width: chipLabel.implicitWidth + 12
-                        radius: 11
-                        color: BearTheme.isLight ? "#ebebf0" : "#1a1a1e"
+                        radius: BearTheme.cornerRadius
+                        color: BearTheme.control
                         border.color: BearTheme.cardBorder
                         border.width: 1
                         Label {
@@ -541,7 +541,7 @@ Rectangle {
                     visible: root.codec.length > 0 && root.codec !== "unknown"
                     height: 20
                     width: codecPill.implicitWidth + 10
-                    radius: 5
+                    radius: BearTheme.smallRadius
                     color: "transparent"
                     border.color: BearTheme.accent
                     border.width: 1
@@ -558,13 +558,13 @@ Rectangle {
                     visible: root.bitrate > 0
                     height: 20
                     width: brPill.implicitWidth + 10
-                    radius: 5
+                    radius: BearTheme.smallRadius
                     color: BearTheme.accent
                     Label {
                         id: brPill
                         anchors.centerIn: parent
                         text: root.bitrate + " kbps"
-                        color: "#ffffff"
+                        color: BearTheme.onAccent
                         font.pixelSize: 9
                         font.bold: true
                     }
@@ -573,8 +573,8 @@ Rectangle {
                     visible: root.votes > 0
                     height: 20
                     width: votesPill.implicitWidth + 10
-                    radius: 5
-                    color: BearTheme.isLight ? "#ebebf0" : "#1a1a1e"
+                    radius: BearTheme.smallRadius
+                    color: BearTheme.control
                     border.color: BearTheme.cardBorder
                     border.width: 1
                     Label {
@@ -648,7 +648,7 @@ Rectangle {
         anchors.bottom: parent.bottom
         visible: root.showTransportDock
         height: visible ? Math.max(200, dockCol.implicitHeight + 40) : 0
-        color: BearTheme.isLight ? "#f7f7f9" : "#0e0e10"
+        color: BearTheme.panelAlt
 
         Rectangle {
             anchors.left: parent.left

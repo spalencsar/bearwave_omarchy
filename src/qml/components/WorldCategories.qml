@@ -78,7 +78,7 @@ ScrollView {
                     required property var modelData
                     width: compactMode ? (countryFlow.width - 8) / 2 : (countryFlow.width - 16) / 3
                     height: 62
-                    radius: 8
+                    radius: BearTheme.cornerRadius
                     color: countryMouse.containsMouse ? BearTheme.cardHover : BearTheme.card
                     border.color: countryMouse.containsMouse ? BearTheme.accent : BearTheme.cardBorder
                     border.width: 1
@@ -174,7 +174,7 @@ ScrollView {
                         required property var modelData
                         width: compactMode ? (tagFlow.width - 8) / 2 : (tagFlow.width - 16) / 3
                         height: 54
-                        radius: 8
+                        radius: BearTheme.cornerRadius
                         color: tagMouse.containsMouse ? BearTheme.cardHover : BearTheme.card
                         border.color: tagMouse.containsMouse ? BearTheme.accent : BearTheme.cardBorder
                         border.width: 1

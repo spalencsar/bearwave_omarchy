@@ -42,9 +42,6 @@ test-*.json
 pkg/
 src/bearwave/
 bearwave/
-flatpak_repo/
-.flatpak-builder/
-.flatpak-builder-manifest.json
 scratch/
 spalencsar-README.md
 *.pkg.tar.zst
@@ -60,17 +57,6 @@ org.kde.bearwave.desktop
 
 ## OS noise
 .DS_Store
-
-## Local Flatpak backup
-flatpak_backup/
-
-## Generated Flatpak build state
-.flatpak-builder-manifest.json
-.flatpak-builder/
-flatpak_build/
-flatpak_repo/
-scratch/
-spalencsar-README.md
 
 ## Local debug screenshots
 screenshots/debug_*.png

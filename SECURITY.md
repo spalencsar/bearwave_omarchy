@@ -2,13 +2,11 @@
 
 BearWave is currently in a public beta phase. Security reports are very welcome and should be handled carefully, especially since BearWave processes external internet radio streams and metadata.
 
-## Official Distribution & Security Notice
+## Local Build Security
 
-We only guarantee the security and integrity of our official distribution channels:
-1. **Our official Flatpak repository** (`https://flatpak.bearwave.app/`), which is GPG-signed by the author.
-2. **Our official AUR package** (`bearwave-git`), where the source code is cloned directly from our official GitHub repository and built locally on your machine.
-
-We **do not verify, support, or guarantee** the security of any other third-party binary repositories (such as unofficial repositories on the openSUSE Build Service, private arch repositories, or other third-party package mirrors). Installing from unofficial sources carries security risks, as the binaries are not compiled or controlled by the original author.
+This Omarchy edition is built and used locally. No prebuilt binary repository
+or automated publishing channel is part of this project. Review the local
+source and build it with the documented CMake workflow.
 
 ## Supported Versions
 
@@ -28,8 +26,8 @@ Please **do not** open a public issue for a vulnerability before it has been rev
 
 Preferred reporting path:
 
-1. Use GitHub's private vulnerability reporting / security advisory feature for this repository, if available.
-2. If private reporting is not available, contact the maintainer through GitHub and request a private disclosure channel.
+Contact the maintainer through an agreed private channel. Do not place secrets,
+access tokens, personal data, or unredacted system logs in this working tree.
 
 Include as much detail as possible:
 

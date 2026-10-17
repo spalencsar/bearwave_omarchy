@@ -1,18 +1,17 @@
 # Contributing to BearWave
 
-BearWave is a Qt 6 desktop internet radio app for Linux, built with C++/QML and QtMultimedia.
+BearWave is a local Qt 6 internet-radio app for Omarchy, built with C++/QML and QtMultimedia.
 
 The project favors:
 
 - stability over feature churn
 - minimal dependencies (Qt only at runtime)
 - readable, conservative code
-- solid desktop integration (MPRIS, tray) across environments
+- solid Omarchy integration (theme, MPRIS, tray)
 
-## Before You Contribute
+## Before You Change Code
 
-- Check existing issues before opening a new one.
-- Prefer focused pull requests over broad refactors.
+- Prefer focused local changes over broad refactors.
 - Keep behavior predictable for desktop users.
 - Avoid adding dependencies unless there is a clear payoff.
 
@@ -39,11 +38,8 @@ qmllint src/qml/Main.qml src/qml/components/*.qml src/qml/theme/BearTheme.qml
 
 ### Layout modes to smoke-test after UI changes
 
-| Window | Expectation |
-|--------|-------------|
-| Wide + tall (`≥1240` × `≥960`) | Now Playing stage + transport **dock** in the stage |
-| Wide + short (e.g. `1440×900`) | Stage open, **compact cover**, bottom **transport-only** strip |
-| Narrow (`<1240`) | No stage; **full** bottom player bar |
+Test the wide Omarchy station list with its bottom player and the compact
+single-column layout below the sidebar threshold.
 
 ```bash
 # Example short-window check
@@ -76,7 +72,7 @@ fixtures against or leave fixture data in a contributor's real
 Please smoke-test the area you changed when possible:
 
 - app launches successfully
-- window decorations, minimize, and close behavior work on the desktop changed
+- frosted-glass rendering and window behavior work under Hyprland
 - station list loads
 - search and filtering behave correctly
 - play/pause/stop work
@@ -85,11 +81,5 @@ Please smoke-test the area you changed when possible:
 - tray and MPRIS behavior still work
 - About page opens from sidebar/compact navigation, social links work, and the GPL license text is scrollable
 
-## Pull Requests
-
-Useful pull requests usually include:
-
-- a short description of the user-visible change
-- any relevant screenshots for UI changes
-- exact verification commands that were run
-- known limitations or follow-up work
+Record important local changes and verification commands in the changelog or
+the handoff notes for this working directory.

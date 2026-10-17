@@ -12,10 +12,9 @@ import components 1.0
 ApplicationWindow {
     id: root
     title: qsTr("BearWave")
-    // Keep native window decorations on every desktop.  In particular, Cinnamon
-    // (Linux Mint) needs the system title bar to expose its close button.
+    // Hyprland supplies the outer border and compositor blur.
     flags: Qt.Window
-    color: BearTheme.bgA
+    color: BearTheme.isOmarchy ? "transparent" : BearTheme.bgA
     readonly property int preferredWindowWidth: 1440
     // Sidebar hides only when very narrow.
     readonly property int sidebarLayoutThreshold: 760
@@ -51,11 +50,11 @@ ApplicationWindow {
     // No sidebar (very narrow).
     property bool compactMode: width < sidebarLayoutThreshold
     // Full three-column layout (sidebar + list + detail).
-    readonly property bool showDetailPanel: width >= detailLayoutThreshold
+    readonly property bool showDetailPanel: !BearTheme.isOmarchy && width >= detailLayoutThreshold
     // Dock transport in the right stage only when wide enough *and* tall enough.
     readonly property bool stageTransportDock: showDetailPanel && height >= stageDockHeightThreshold
     // Wrapped/flow filters when the one-line filter row would clip.
-    readonly property bool useFlowFilters: !showDetailPanel
+    readonly property bool useFlowFilters: BearTheme.isOmarchy ? width < 1050 : !showDetailPanel
     property real contentOpacity: 1.0
     property string activeQuickFilter: ""
     property string selectedWorldCategory: ""
@@ -124,6 +123,17 @@ ApplicationWindow {
         }
     }
 
+    function pageTitle() {
+        switch (currentPage) {
+        case "favorites": return qsTr("Favorites")
+        case "mystations": return qsTr("My stations")
+        case "history": return qsTr("Recent")
+        case "world": return qsTr("World radio")
+        case "search": return qsTr("Search results")
+        default: return qsTr("Stations")
+        }
+    }
+
     onCurrentPageChanged: {
         contentOpacity = 0.85
         contentFadeRestart.restart()
@@ -159,13 +169,30 @@ ApplicationWindow {
         }
     }
 
+    PlayerBar {
+        id: omarchyPlayer
+        visible: BearTheme.isOmarchy
+        height: visible ? implicitHeight : 0
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.leftMargin: 18
+        anchors.rightMargin: 18
+        anchors.bottomMargin: 18
+        app: root
+        transportOnly: false
+    }
+
     SidebarNavigation {
         id: sidebar
-        width: root.compactMode ? 0 : 228
+        width: root.compactMode ? 0 : (BearTheme.isOmarchy ? 248 : 228)
         visible: !root.compactMode
         anchors.left: parent.left
         anchors.top: parent.top
-        anchors.bottom: parent.bottom
+        anchors.bottom: BearTheme.isOmarchy ? omarchyPlayer.top : parent.bottom
+        anchors.leftMargin: BearTheme.isOmarchy ? 18 : 0
+        anchors.topMargin: BearTheme.isOmarchy ? 18 : 0
+        anchors.bottomMargin: BearTheme.isOmarchy ? 14 : 0
         app: root
     }
 
@@ -174,7 +201,11 @@ ApplicationWindow {
         anchors.left: root.compactMode ? parent.left : sidebar.right
         anchors.right: parent.right
         anchors.top: parent.top
-        anchors.bottom: parent.bottom
+        anchors.bottom: BearTheme.isOmarchy ? omarchyPlayer.top : parent.bottom
+        anchors.leftMargin: BearTheme.isOmarchy ? 14 : 0
+        anchors.rightMargin: BearTheme.isOmarchy ? 18 : 0
+        anchors.topMargin: BearTheme.isOmarchy ? 18 : 0
+        anchors.bottomMargin: BearTheme.isOmarchy ? 14 : 0
 
         Rectangle {
             id: topToolbar
@@ -183,9 +214,10 @@ ApplicationWindow {
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.top: parent.top
-            // Seamless with workspace — no heavy KDE toolwindow frame.
-            color: BearTheme.bgA
-            border.width: 0
+            // Seamless frosted-glass workspace header.
+            color: BearTheme.isOmarchy ? BearTheme.panel : BearTheme.bgA
+            border.width: BearTheme.isOmarchy ? 1 : 0
+            border.color: BearTheme.cardBorder
             clip: true
 
             // Soft separator under header
@@ -213,6 +245,26 @@ ApplicationWindow {
                     visible: root.compactMode
                     app: root
                     compactMode: root.compactMode
+                }
+
+                ColumnLayout {
+                    Layout.fillWidth: true
+                    visible: BearTheme.isOmarchy && !root.compactMode
+                    spacing: 1
+
+                    Label {
+                        text: root.pageTitle()
+                        color: BearTheme.textMain
+                        font.pixelSize: 16
+                        font.bold: true
+                    }
+
+                    Label {
+                        text: qsTr("Internet radio") + "  ·  "
+                              + root.activeModel().length + " " + qsTr("stations")
+                        color: BearTheme.textMuted
+                        font.pixelSize: 11
+                    }
                 }
 
                 // Branding only lives in the sidebar wordmark — not repeated here.
@@ -268,7 +320,7 @@ ApplicationWindow {
             anchors.right: parent.right
             anchors.bottom: parent.bottom
             app: root
-            visible: !root.stageTransportDock
+            visible: !BearTheme.isOmarchy && !root.stageTransportDock
             transportOnly: root.showDetailPanel && !root.stageTransportDock
         }
 
@@ -277,7 +329,7 @@ ApplicationWindow {
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.top: topToolbar.bottom
-            anchors.bottom: root.stageTransportDock ? parent.bottom : playerBar.top
+            anchors.bottom: BearTheme.isOmarchy || root.stageTransportDock ? parent.bottom : playerBar.top
             clip: true
             opacity: contentOpacity
 
@@ -293,8 +345,9 @@ ApplicationWindow {
                 // Gap before the stage so list chrome never abuts the right panel.
                 anchors.right: root.showDetailPanel ? detailPanel.left : parent.right
                 anchors.rightMargin: root.showDetailPanel ? 0 : 0
-                color: BearTheme.bgA
-                border.width: 0
+                color: BearTheme.isOmarchy ? "transparent" : BearTheme.bgA
+                border.width: BearTheme.isOmarchy ? 1 : 0
+                border.color: BearTheme.cardBorder
                 clip: true
 
                 // Soft divider owned by the list column (not by card borders).
@@ -387,6 +440,15 @@ ApplicationWindow {
     ToastPopup {
         id: toastPopup
         window: root
+    }
+
+    Rectangle {
+        anchors.fill: parent
+        color: "transparent"
+        border.width: 1
+        border.color: BearTheme.cardBorder
+        visible: BearTheme.isOmarchy
+        z: 1000
     }
 
     Timer {

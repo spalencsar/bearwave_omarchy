@@ -19,7 +19,8 @@ set(SOURCES
     notificationmanager.cpp
     icyreader.cpp
     systemtraymanager.cpp
-    colorschemecontroller.cpp
+    desktopenvironment.cpp
+    omarchythemecontroller.cpp
 )
 
 # Create executable

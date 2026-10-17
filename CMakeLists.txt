@@ -31,6 +31,4 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/de.nerdbear.bearwave.desktop DESTINATI
 
 # Install app icon
 install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/assets/app/bearwave.svg DESTINATION share/icons/hicolor/scalable/apps RENAME de.nerdbear.bearwave.svg)
-
-# Install AppStream metadata
-install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/de.nerdbear.bearwave.metainfo.xml DESTINATION share/metainfo)
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/assets/app/bearwave-symbolic.svg DESTINATION share/icons/hicolor/symbolic/apps RENAME de.nerdbear.bearwave-symbolic.svg)

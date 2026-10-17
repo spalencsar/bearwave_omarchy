@@ -81,7 +81,7 @@ Rectangle {
         anchors.fill: parent
         anchors.margins: 12
         spacing: 14
-        visible: !root.transportOnly
+        visible: !root.transportOnly && !BearTheme.isOmarchy
 
         Item {
             Layout.preferredWidth: 64
@@ -155,7 +155,7 @@ Rectangle {
                              && app.backend.currentStation.codec !== ""
                     height: 18
                     width: codecLabel.implicitWidth + 12
-                    radius: 4
+                    radius: BearTheme.smallRadius
                     color: "transparent"
                     border.color: BearTheme.accent
                     border.width: 1
@@ -175,7 +175,7 @@ Rectangle {
                     visible: app.backend && app.backend.currentStation && app.backend.currentStation.bitrate > 0
                     height: 18
                     width: bitrateLabel.implicitWidth + 12
-                    radius: 4
+                    radius: BearTheme.smallRadius
                     color: BearTheme.accent
                     border.color: BearTheme.accent
                     border.width: 1
@@ -185,7 +185,7 @@ Rectangle {
                         anchors.centerIn: parent
                         text: (app.backend && app.backend.currentStation)
                               ? app.backend.currentStation.bitrate + " kbps" : ""
-                        color: "#ffffff"
+                        color: BearTheme.onAccent
                         font.pixelSize: 9
                         font.bold: true
                     }
@@ -215,6 +215,72 @@ Rectangle {
                 controlHeight: 30
                 controlWidth: 38
             }
+        }
+    }
+
+    // Omarchy layout: metadata left, transport centered, volume at the right.
+    RowLayout {
+        anchors.fill: parent
+        anchors.margins: 12
+        spacing: 14
+        visible: !root.transportOnly && BearTheme.isOmarchy
+
+        Item {
+            Layout.preferredWidth: 64
+            Layout.preferredHeight: 64
+
+            StationLogo {
+                anchors.fill: parent
+                app: root.app
+                stationName: app.backend && app.backend.currentStation
+                             ? (app.backend.currentStation.name || "") : ""
+                stationKey: app.backend && app.backend.currentStation
+                            ? (app.backend.currentStation.uuid
+                               || app.backend.currentStation.urlResolved
+                               || app.backend.currentStation.url
+                               || app.backend.currentStation.name
+                               || "") : ""
+                faviconUrl: app.backend && app.backend.currentStation
+                            ? (app.backend.currentStation.favicon || "") : ""
+                homepageUrl: app.backend && app.backend.currentStation
+                             ? (app.backend.currentStation.homepage || "") : ""
+                logoMargin: 6
+            }
+        }
+
+        ColumnLayout {
+            Layout.preferredWidth: 280
+            Layout.maximumWidth: 320
+            spacing: 4
+
+            Label {
+                Layout.fillWidth: true
+                text: root.player && root.player.currentStationName.length > 0
+                      ? root.player.currentStationName : qsTr("No station selected")
+                color: BearTheme.textMain
+                font.pixelSize: 14
+                font.bold: true
+                elide: Text.ElideRight
+            }
+
+            Label {
+                Layout.fillWidth: true
+                text: root.connectionStatusText()
+                color: root.player && root.player.playing ? BearTheme.textMain : BearTheme.textMuted
+                font.pixelSize: 11
+                elide: Text.ElideRight
+            }
+        }
+
+        Item { Layout.fillWidth: true }
+
+        PlayerTransport {
+            Layout.preferredWidth: Math.min(620, Math.max(360, root.width * 0.5))
+            Layout.preferredHeight: 40
+            app: root.app
+            variant: "inline"
+            controlHeight: 36
+            controlWidth: 38
         }
     }
 }

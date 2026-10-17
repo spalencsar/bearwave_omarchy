@@ -7,7 +7,7 @@ import QtQuick.Layouts 1.15
 
 import theme 1.0
 
-// Soft pill search bar, not stock Fusion/KDE TextField chrome.
+// Compact outlined search bar for the Omarchy interface.
 ColumnLayout {
     id: root
 
@@ -44,8 +44,8 @@ ColumnLayout {
             id: searchShell
             Layout.fillWidth: true
             Layout.preferredHeight: 42
-            radius: 21
-            color: BearTheme.isLight ? "#ebebf0" : "#1a1a1e"
+            radius: BearTheme.cornerRadius
+            color: BearTheme.control
             border.width: searchField.activeFocus ? 1.5 : 1
             border.color: searchField.activeFocus ? BearTheme.accent : BearTheme.cardBorder
 
@@ -117,14 +117,14 @@ ColumnLayout {
         Rectangle {
             Layout.preferredHeight: 42
             Layout.preferredWidth: Math.max(searchBtnLabel.implicitWidth + 28, 88)
-            radius: 21
+            radius: BearTheme.cornerRadius
             color: searchMa.containsMouse || searchMa.pressed ? Qt.darker(BearTheme.accent, 1.1) : BearTheme.accent
 
             Label {
                 id: searchBtnLabel
                 anchors.centerIn: parent
                 text: qsTr("Search")
-                color: "#ffffff"
+                color: BearTheme.onAccent
                 font.pixelSize: 13
                 font.bold: true
             }

@@ -13,14 +13,14 @@ Rectangle {
 
     visible: app.backend && app.backend.loading
     anchors.fill: parent
-    color: BearTheme.isLight ? "#99f4f4f6" : "#990a0a0b"
+    color: BearTheme.alpha(BearTheme.bgA, 0.72)
     z: 20
 
     Rectangle {
         anchors.centerIn: parent
         width: 210
         height: 110
-        radius: 12
+        radius: BearTheme.cornerRadius
         color: BearTheme.panel
         border.color: BearTheme.cardBorder
 

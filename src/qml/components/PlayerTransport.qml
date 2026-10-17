@@ -214,7 +214,7 @@ Item {
                         width: volSlider.availableWidth
                         height: 6
                         radius: 3
-                        color: BearTheme.isLight ? "#e0e0e6" : "#2a2a30"
+                        color: BearTheme.controlHover
                         Rectangle {
                             width: volSlider.visualPosition * parent.width
                             height: parent.height
