@@ -14,17 +14,17 @@ up while BearWave is running.
 
 ### Frosted-glass window
 
-![BearWave with a running station in a floating Omarchy window](screenshots/omarchy/bearwave-hero.png)
+![BearWave with a running station in a floating Omarchy window](screenshots/bearwave-hero.png)
 
 ### Station browser and playback
 
 | Station browser | Now playing |
 | --- | --- |
-| ![BearWave station browser](screenshots/omarchy/bearwave-stations.png) | ![BearWave playing a radio station](screenshots/omarchy/bearwave-now-playing.png) |
+| ![BearWave station browser](screenshots/bearwave-stations.png) | ![BearWave playing a radio station](screenshots/bearwave-now-playing.png) |
 
 ### Omarchy bar integration
 
-![BearWave icon in the Omarchy bar](screenshots/omarchy/bearwave-bar.png)
+![BearWave icon in the Omarchy bar](screenshots/bearwave-bar.png)
 
 ## Features
 
@@ -66,7 +66,7 @@ ctest --test-dir build-omarchy --output-on-failure
 Add and enable the BearWave bar plugin:
 
 ```bash
-omarchy plugin add https://hostbw.de/spalencsar/bearwave_omarchy.git --enable
+omarchy plugin add https://github.com/spalencsar/bearwave_omarchy.git --enable
 ```
 
 Omarchy intentionally does not execute install hooks for plugins. On first
