@@ -69,12 +69,12 @@ jobs:
 
       - name: Configure GitHub SSH key
         env:
-          GITHUB_DEPLOY_KEY: ${{ secrets.GITHUB_DEPLOY_KEY }}
+          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
         run: |
           set -euo pipefail
-          test -n "$GITHUB_DEPLOY_KEY"
+          test -n "$DEPLOY_KEY"
           install -d -m 0700 "$HOME/.ssh"
-          printf '%s\n' "$GITHUB_DEPLOY_KEY" > "$HOME/.ssh/id_ed25519"
+          printf '%s\n' "$DEPLOY_KEY" > "$HOME/.ssh/id_ed25519"
           chmod 0600 "$HOME/.ssh/id_ed25519"
           ssh-keyscan -H -t ed25519 github.com > "$HOME/.ssh/known_hosts"
           chmod 0644 "$HOME/.ssh/known_hosts"
