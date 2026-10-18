@@ -1,5 +1,12 @@
 # BearWave for Omarchy
 
+[![Build](https://github.com/spalencsar/bearwave/actions/workflows/build.yml/badge.svg)](https://github.com/spalencsar/bearwave/actions/workflows/build.yml)
+![Linux](https://img.shields.io/badge/platform-Linux-blue)
+![Desktop](https://img.shields.io/badge/desktop-Linux%20(Qt%206)-1f6feb)
+![Qt 6](https://img.shields.io/badge/Qt-6-41cd52)
+![License: GPL--3.0--or--later](https://img.shields.io/badge/license-GPL--3.0--or--later-lightgrey)
+![Version](https://img.shields.io/badge/version-1.3.0-blue)
+
 BearWave is a local Qt 6 internet-radio player designed specifically for
 Omarchy and Hyprland.
 
