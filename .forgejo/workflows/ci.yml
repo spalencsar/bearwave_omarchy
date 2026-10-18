@@ -23,8 +23,8 @@ jobs:
       - name: Reject local agent files
         run: |
           set -euo pipefail
-          if git ls-files | grep -Eq '(^|/)(AGENTS\.md|MEMORY\.md)$'; then
-            echo 'AGENTS.md and MEMORY.md must never be committed.' >&2
+          if git ls-files | grep -Eiq '(^|/)(agents|memory)\.md$'; then
+            echo 'AGENTS.md and Memory.md files must never be committed.' >&2
             exit 1
           fi
 
