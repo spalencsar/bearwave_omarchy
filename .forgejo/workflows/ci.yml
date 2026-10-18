@@ -66,8 +66,6 @@ jobs:
     steps:
       - name: Check out tested revision
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Configure GitHub SSH key
         env:
