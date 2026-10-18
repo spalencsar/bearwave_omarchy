@@ -1,0 +1,90 @@
+name: Build, test and deploy
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: bearwave-omarchy-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    name: Build and test
+    runs-on: linux-amd64
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Reject local agent files
+        run: |
+          set -euo pipefail
+          if git ls-files | grep -Eq '(^|/)(AGENTS\.md|MEMORY\.md)$'; then
+            echo 'AGENTS.md and MEMORY.md must never be committed.' >&2
+            exit 1
+          fi
+
+      - name: Install build dependencies
+        run: |
+          set -euo pipefail
+          apt-get update
+          apt-get install -y --no-install-recommends \
+            build-essential \
+            cmake \
+            ninja-build \
+            qt6-base-dev \
+            qt6-declarative-dev \
+            qt6-multimedia-dev \
+            qt6-tools-dev \
+            qt6-tools-dev-tools
+
+      - name: Configure
+        run: |
+          cmake -S . -B build-ci -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBEARWAVE_BUILD_TESTS=ON
+
+      - name: Build
+        run: cmake --build build-ci --parallel
+
+      - name: Test
+        env:
+          QT_QPA_PLATFORM: offscreen
+          QT_MEDIA_BACKEND: ffmpeg
+        run: ctest --test-dir build-ci --output-on-failure
+
+  deploy-github:
+    name: Deploy to GitHub
+    needs: build-and-test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: linux-amd64
+
+    steps:
+      - name: Check out tested revision
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure GitHub SSH key
+        env:
+          GITHUB_DEPLOY_KEY: ${{ secrets.GITHUB_DEPLOY_KEY }}
+        run: |
+          set -euo pipefail
+          test -n "$GITHUB_DEPLOY_KEY"
+          install -d -m 0700 "$HOME/.ssh"
+          printf '%s\n' "$GITHUB_DEPLOY_KEY" > "$HOME/.ssh/id_ed25519"
+          chmod 0600 "$HOME/.ssh/id_ed25519"
+          ssh-keyscan -H -t ed25519 github.com > "$HOME/.ssh/known_hosts"
+          chmod 0644 "$HOME/.ssh/known_hosts"
+
+      - name: Push tested revision to GitHub
+        env:
+          GIT_SSH_COMMAND: ssh -o IdentitiesOnly=yes -o BatchMode=yes
+        run: |
+          set -euo pipefail
+          git remote add github git@github.com:spalencsar/bearwave_omarchy.git
+          git push github HEAD:main

@@ -92,6 +92,18 @@ To remove the local application and then its plugin:
 omarchy plugin remove de.nerdbear.bearwave
 ```
 
+## Continuous integration
+
+Forgejo Actions builds BearWave once and runs the complete test suite for
+every push to `main`, every pull request, and manually started workflow. A
+successful push build on `main` is then deployed over SSH to
+`git@github.com:spalencsar/bearwave_omarchy.git`.
+
+The Forgejo repository needs a secret named `GITHUB_DEPLOY_KEY` containing a
+private SSH key with write access to that GitHub repository. Its public key
+should be added on GitHub as a write-enabled deploy key. Pull requests and
+manual workflow runs never deploy.
+
 ## Omarchy integration
 
 BearWave recognizes Omarchy through the desktop-session environment and the
