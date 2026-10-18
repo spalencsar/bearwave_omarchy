@@ -1,6 +1,6 @@
 # BearWave for Omarchy
 
-[![Build](https://github.com/spalencsar/bearwave/actions/workflows/build.yml/badge.svg)](https://github.com/spalencsar/bearwave/actions/workflows/build.yml)
+![CI](https://img.shields.io/badge/CI-Forgejo%20Actions-success)
 ![Linux](https://img.shields.io/badge/platform-Linux-blue)
 ![Desktop](https://img.shields.io/badge/desktop-Linux%20(Qt%206)-1f6feb)
 ![Qt 6](https://img.shields.io/badge/Qt-6-41cd52)
@@ -126,6 +126,11 @@ BearWave does not modify the Omarchy or Hyprland configuration.
 
 - settings and stations: `~/.config/bearwave/`
 - API and artwork cache: `~/.cache/bearwave/`
+
+The configuration directory is kept owner-only. BearWave also stores its
+settings, favourites, manual stations, and playback state in owner-readable
+and owner-writable files, because manually added stream URLs can contain
+credentials or access tokens.
 
 Set `BEARWAVE_THEME=light` or `BEARWAVE_THEME=dark` only for temporary theme
 debugging outside the normal Omarchy palette.

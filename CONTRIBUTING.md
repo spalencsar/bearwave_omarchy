@@ -63,6 +63,9 @@ fixtures against or leave fixture data in a contributor's real
 - Keep changes minimal and scoped.
 - Do not block the UI thread.
 - Keep network operations asynchronous.
+- Treat station data, stream metadata, artwork URLs, and manually entered
+  stream URLs as untrusted input. Do not weaken URL validation, private-file
+  permissions, or explicit plain-text rendering at QML display boundaries.
 - Preserve MPRIS behavior and user state compatibility.
 - When changing resources, register them in `src/qml.qrc`.
 - When changing the About page, keep the full GPL text resource visible and keep third-party technology notes accurate.
@@ -83,3 +86,11 @@ Please smoke-test the area you changed when possible:
 
 Record important local changes and verification commands in the changelog or
 the handoff notes for this working directory.
+
+## CI and deployment
+
+Forgejo Actions builds and tests pull requests, manual runs, and pushes to
+`main`. A successful push to `main` then mirrors the exact tested revision to
+the public GitHub repository. Do not push the mirror directly or add local
+`.agents` notes to Git; the workflow rejects tracked `AGENTS.md` and
+`Memory.md` files.

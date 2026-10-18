@@ -2,11 +2,18 @@
 
 BearWave is currently in a public beta phase. Security reports are very welcome and should be handled carefully, especially since BearWave processes external internet radio streams and metadata.
 
-## Local Build Security
+## Build and release security
 
-This Omarchy edition is built and used locally. No prebuilt binary repository
-or automated publishing channel is part of this project. Review the local
-source and build it with the documented CMake workflow.
+This Omarchy edition is built locally from source. Forgejo Actions builds and
+tests changes; only a successful `main` build is mirrored to the public GitHub
+repository. Review the source and build it with the documented CMake workflow
+when installing from a checkout.
+
+BearWave processes untrusted station records, artwork links, redirects, and
+stream metadata. The current code rejects artwork requests to non-public
+network targets, renders external metadata as plain text, and stores persisted
+stream URLs in owner-only configuration data. Please preserve these controls
+when contributing changes.
 
 ## Supported Versions
 
