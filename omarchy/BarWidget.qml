@@ -54,13 +54,23 @@ BarWidget {
       launch()
       return
     }
-    Quickshell.execDetached(["playerctl", "--player=bearwave", "play-pause"])
+    Quickshell.execDetached([
+      "gdbus", "call", "--session",
+      "--dest", "org.mpris.MediaPlayer2.bearwave",
+      "--object-path", "/org/mpris/MediaPlayer2",
+      "--method", "org.mpris.MediaPlayer2.Player.PlayPause"
+    ])
     delayedRefresh.restart()
   }
 
   function stopPlayback() {
     if (installed && playbackStatus !== "Stopped") {
-      Quickshell.execDetached(["playerctl", "--player=bearwave", "stop"])
+      Quickshell.execDetached([
+        "gdbus", "call", "--session",
+        "--dest", "org.mpris.MediaPlayer2.bearwave",
+        "--object-path", "/org/mpris/MediaPlayer2",
+        "--method", "org.mpris.MediaPlayer2.Player.Stop"
+      ])
       delayedRefresh.restart()
     }
   }
@@ -94,13 +104,22 @@ BarWidget {
 
   Process {
     id: statusCheck
-    command: ["playerctl", "--player=bearwave", "status"]
+    command: [
+      "gdbus", "call", "--session",
+      "--dest", "org.mpris.MediaPlayer2.bearwave",
+      "--object-path", "/org/mpris/MediaPlayer2",
+      "--method", "org.freedesktop.DBus.Properties.Get",
+      "org.mpris.MediaPlayer2.Player", "PlaybackStatus"
+    ]
     stdout: StdioCollector {
       waitForEnd: true
       onStreamFinished: {
-        var state = String(text || "").trim()
-        root.playbackStatus = state === "Playing" || state === "Paused"
-          ? state : "Stopped"
+        var state = String(text || "")
+        root.playbackStatus = state.indexOf("'Playing'") !== -1
+          ? "Playing"
+          : state.indexOf("'Paused'") !== -1
+          ? "Paused"
+          : "Stopped"
       }
     }
     onExited: function(exitCode) {

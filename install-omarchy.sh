@@ -23,7 +23,7 @@ fi
 if (( ! skip_dependencies )); then
   echo "Installing the BearWave build and runtime dependencies through Omarchy..."
   omarchy pkg add base-devel cmake ninja qt6-base qt6-declarative \
-    qt6-multimedia qt6-multimedia-ffmpeg qt6-tools playerctl
+    qt6-multimedia qt6-multimedia-ffmpeg qt6-tools
 fi
 
 mkdir -p -- "${BEARWAVE_BUILD_DIR}"

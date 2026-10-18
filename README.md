@@ -3,10 +3,28 @@
 BearWave is a local Qt 6 internet-radio player designed specifically for
 Omarchy and Hyprland.
 
+![BearWave floating on an Omarchy desktop](preview.png)
+
 The application follows the current Omarchy theme from
 `~/.local/state/omarchy/current/theme/colors.toml`, uses the system monospace
 font, and renders its window as native frosted glass. Theme changes are picked
 up while BearWave is running.
+
+## Screenshots
+
+### Frosted-glass window
+
+![BearWave with a running station in a floating Omarchy window](screenshots/omarchy/bearwave-hero.png)
+
+### Station browser and playback
+
+| Station browser | Now playing |
+| --- | --- |
+| ![BearWave station browser](screenshots/omarchy/bearwave-stations.png) | ![BearWave playing a radio station](screenshots/omarchy/bearwave-now-playing.png) |
+
+### Omarchy bar integration
+
+![BearWave icon in the Omarchy bar](screenshots/omarchy/bearwave-bar.png)
 
 ## Features
 
