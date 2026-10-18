@@ -67,6 +67,9 @@ jobs:
       - name: Check out tested revision
         uses: actions/checkout@v4
 
+      - name: Fetch complete history
+        run: git fetch --unshallow --tags origin
+
       - name: Configure GitHub SSH key
         env:
           DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
