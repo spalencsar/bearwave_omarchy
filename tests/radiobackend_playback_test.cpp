@@ -11,6 +11,7 @@
 #include <QTemporaryDir>
 #include <QCryptographicHash>
 #include <QStandardPaths>
+#include <QStringList>
 
 #include "radiobackend.h"
 #include "bearplayer.h"
@@ -496,9 +497,17 @@ void RadioBackendPlaybackTest::player_exposes_connection_and_retry_states()
     BearPlayer player;
     QCOMPARE(player.connectionState(), QStringLiteral("idle"));
 
+    QStringList observedStates;
+    connect(&player, &BearPlayer::connectionStateChanged, &player, [&]() {
+        observedStates.append(player.connectionState());
+    });
+
     player.playUrl(QStringLiteral("http://127.0.0.1:9/stream"),
                    QStringLiteral("Test Station"));
-    QCOMPARE(player.connectionState(), QStringLiteral("connecting"));
+    // QMediaPlayer backends differ in whether PlayingState is emitted
+    // synchronously from play(). The player must still expose the initial
+    // connection transition before accepting a backend-driven state.
+    QVERIFY(observedStates.contains(QStringLiteral("connecting")));
 
     // Playing takes priority over BufferingMedia (live streams re-buffer often).
     QVERIFY(QMetaObject::invokeMethod(
