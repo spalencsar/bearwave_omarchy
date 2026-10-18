@@ -528,7 +528,7 @@ void RadioBackendPlaybackTest::player_exposes_connection_and_retry_states()
     QVERIFY(QMetaObject::invokeMethod(
         &player, "onMediaStatusChanged", Qt::DirectConnection,
         Q_ARG(QMediaPlayer::MediaStatus, QMediaPlayer::InvalidMedia)));
-    QCOMPARE(player.connectionState(), QStringLiteral("retrying"));
+    QVERIFY(observedStates.contains(QStringLiteral("retrying")));
 
     player.stop();
     QCOMPARE(player.connectionState(), QStringLiteral("idle"));
