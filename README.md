@@ -10,6 +10,8 @@
 BearWave is a local Qt 6 internet-radio player designed specifically for
 Omarchy and Hyprland.
 
+[Install BearWave from the Omarchy Plugin Marketplace](https://plugins.omarchy.org/plugin.html?id=de.nerdbear.bearwave).
+
 ![BearWave floating on an Omarchy desktop](preview.png)
 
 The application follows the current Omarchy theme from
@@ -70,7 +72,8 @@ ctest --test-dir build-omarchy --output-on-failure
 
 ## Install as an Omarchy plugin
 
-Add and enable the BearWave bar plugin:
+BearWave is listed in the [Omarchy Plugin Marketplace](https://plugins.omarchy.org/plugin.html?id=de.nerdbear.bearwave).
+Install it from there, or add and enable the plugin directly:
 
 ```bash
 omarchy plugin add https://github.com/spalencsar/bearwave_omarchy.git --enable
@@ -98,6 +101,15 @@ To remove the local application and then its plugin:
 ~/.config/omarchy/plugins/de.nerdbear.bearwave/uninstall-omarchy.sh
 omarchy plugin remove de.nerdbear.bearwave
 ```
+
+## Not using Omarchy?
+
+This repository is the Omarchy- and Hyprland-specific edition, including the
+bar widget and theme integration. For the regular multi-desktop BearWave app
+(Flatpak, AUR, and source-install instructions), use the separate
+[BearWave repository](https://github.com/spalencsar/bearwave). Do not install
+both editions as replacements for one another: they use the same application
+and MPRIS identity.
 
 ## Continuous integration
 
