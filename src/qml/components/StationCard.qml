@@ -187,6 +187,7 @@ Rectangle {
                 Label {
                     Layout.fillWidth: true
                     text: root.modelData.name || ""
+                    textFormat: Text.PlainText
                     color: root.isCurrent ? BearTheme.accent : BearTheme.textMain
                     font.bold: true
                     font.pixelSize: 14
@@ -281,6 +282,7 @@ Rectangle {
                     if (root.bitrateValue > 0) parts.push(root.bitrateValue + " kbps")
                     return parts.length > 0 ? parts.join("  ·  ") : qsTr("Stream")
                 }
+                textFormat: Text.PlainText
                 color: BearTheme.textMuted
                 font.pixelSize: 11
                 elide: Text.ElideRight
@@ -386,6 +388,7 @@ Rectangle {
             id: chipLabel
             anchors.centerIn: parent
             text: parent.text
+            textFormat: Text.PlainText
             color: parent.filled ? BearTheme.onAccent : BearTheme.textMuted
             font.pixelSize: 10
             font.bold: parent.filled

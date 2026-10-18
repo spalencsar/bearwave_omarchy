@@ -273,6 +273,7 @@ Rectangle {
                 Label {
                     Layout.fillWidth: true
                     text: root.stationName.length > 0 ? root.stationName : qsTr("Unknown station")
+                    textFormat: Text.PlainText
                     color: BearTheme.textMain
                     font.pixelSize: 17
                     font.bold: true
@@ -284,6 +285,7 @@ Rectangle {
                 Label {
                     Layout.fillWidth: true
                     text: root.country
+                    textFormat: Text.PlainText
                     visible: text.length > 0
                     color: BearTheme.textMuted
                     font.pixelSize: 12
@@ -360,6 +362,7 @@ Rectangle {
                         Layout.fillWidth: true
                         visible: root.trackArtist.length > 0
                         text: root.trackArtist
+                        textFormat: Text.PlainText
                         color: BearTheme.textMain
                         font.pixelSize: 16
                         font.bold: true
@@ -371,6 +374,7 @@ Rectangle {
                         Layout.fillWidth: true
                         visible: root.trackTitle.length > 0
                         text: root.trackTitle
+                        textFormat: Text.PlainText
                         color: BearTheme.textMain
                         font.pixelSize: 15
                         wrapMode: Text.WordWrap
@@ -383,6 +387,7 @@ Rectangle {
                                  && root.trackArtist.length === 0
                                  && root.trackTitle.length === 0
                         text: root.nowPlayingLine
+                        textFormat: Text.PlainText
                         color: BearTheme.textMain
                         font.pixelSize: 15
                         font.bold: true
