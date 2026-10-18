@@ -197,6 +197,7 @@ Rectangle {
             Label {
                 Layout.fillWidth: true
                 text: root.connectionStatusText()
+                textFormat: Text.PlainText
                 color: root.player && root.player.connectionState === "error"
                        ? BearTheme.warn
                        : (root.player && root.player.playing
@@ -269,6 +270,7 @@ Rectangle {
             Label {
                 Layout.fillWidth: true
                 text: root.connectionStatusText()
+                textFormat: Text.PlainText
                 color: root.player && root.player.playing ? BearTheme.textMain : BearTheme.textMuted
                 font.pixelSize: 11
                 elide: Text.ElideRight

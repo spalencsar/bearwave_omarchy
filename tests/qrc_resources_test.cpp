@@ -61,7 +61,13 @@ void QrcResourcesTest::remoteTextIsRenderedAsPlainText()
                           "                    textFormat: Text.PlainText")));
     const QByteArray playerBar =
         qmlContents(QStringLiteral(":/qml/components/PlayerBar.qml"));
-    QVERIFY(playerBar.contains(QByteArrayLiteral("textFormat: Text.PlainText")));
+    QVERIFY(playerBar.contains(
+        QByteArrayLiteral("text: root.connectionStatusText()\n"
+                          "                textFormat: Text.PlainText")));
+    QCOMPARE(playerBar.count(
+                 QByteArrayLiteral("text: root.connectionStatusText()\n"
+                                   "                textFormat: Text.PlainText")),
+             2);
 }
 
 QTEST_APPLESS_MAIN(QrcResourcesTest)
