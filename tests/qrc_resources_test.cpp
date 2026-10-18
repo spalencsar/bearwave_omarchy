@@ -59,6 +59,16 @@ void QrcResourcesTest::remoteTextIsRenderedAsPlainText()
         QByteArrayLiteral("text: root.stationName.length > 0 ? root.stationName"
                           " : qsTr(\"Unknown station\")\n"
                           "                    textFormat: Text.PlainText")));
+    QVERIFY(stationDetail.contains(
+        QByteArrayLiteral("text: root.previousTrack ? (root.previousTrack.artist"
+                          " || \"\") : \"\"\n"
+                          "                        textFormat: Text.PlainText")));
+    QVERIFY(stationDetail.contains(
+        QByteArrayLiteral("text: parent.modelData\n"
+                          "                            textFormat: Text.PlainText")));
+    QVERIFY(stationDetail.contains(
+        QByteArrayLiteral("text: root.codec.toUpperCase()\n"
+                          "                        textFormat: Text.PlainText")));
     const QByteArray playerBar =
         qmlContents(QStringLiteral(":/qml/components/PlayerBar.qml"));
     QVERIFY(playerBar.contains(

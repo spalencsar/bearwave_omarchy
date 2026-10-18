@@ -441,6 +441,7 @@ Rectangle {
                         visible: root.previousTrack
                                  && (root.previousTrack.artist || "").length > 0
                         text: root.previousTrack ? (root.previousTrack.artist || "") : ""
+                        textFormat: Text.PlainText
                         color: BearTheme.textMuted
                         font.pixelSize: 13
                         font.bold: true
@@ -453,6 +454,7 @@ Rectangle {
                         visible: root.previousTrack
                                  && (root.previousTrack.title || "").length > 0
                         text: root.previousTrack ? (root.previousTrack.title || "") : ""
+                        textFormat: Text.PlainText
                         color: BearTheme.textMuted
                         font.pixelSize: 13
                         wrapMode: Text.WordWrap
@@ -465,6 +467,7 @@ Rectangle {
                                  && (root.previousTrack.artist || "").length === 0
                                  && (root.previousTrack.title || "").length === 0
                         text: root.trackLine(root.previousTrack)
+                        textFormat: Text.PlainText
                         color: BearTheme.textMuted
                         font.pixelSize: 13
                         wrapMode: Text.WordWrap
@@ -499,6 +502,7 @@ Rectangle {
                         required property var modelData
                         Layout.fillWidth: true
                         text: "·  " + root.trackLine(modelData)
+                        textFormat: Text.PlainText
                         color: BearTheme.textMuted
                         font.pixelSize: 11
                         wrapMode: Text.WordWrap
@@ -528,6 +532,7 @@ Rectangle {
                             id: chipLabel
                             anchors.centerIn: parent
                             text: parent.modelData
+                            textFormat: Text.PlainText
                             color: BearTheme.textMuted
                             font.pixelSize: 10
                         }
@@ -554,6 +559,7 @@ Rectangle {
                         id: codecPill
                         anchors.centerIn: parent
                         text: root.codec.toUpperCase()
+                        textFormat: Text.PlainText
                         color: BearTheme.accent
                         font.pixelSize: 9
                         font.bold: true
