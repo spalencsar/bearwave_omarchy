@@ -37,6 +37,10 @@ cmake -S "${BEARWAVE_SOURCE_DIR}" -B "${BEARWAVE_BUILD_DIR}" \
 cmake --build "${BEARWAVE_BUILD_DIR}" --parallel
 cmake --install "${BEARWAVE_BUILD_DIR}"
 
+# Versions before 1.4 installed a launcher entry. BearWave is now an Omarchy
+# bar app, so updates also remove the obsolete standalone launcher.
+rm -f -- "${BEARWAVE_PREFIX}/share/applications/de.nerdbear.bearwave.desktop"
+
 if command -v update-desktop-database >/dev/null 2>&1; then
   update-desktop-database "${BEARWAVE_PREFIX}/share/applications" >/dev/null 2>&1 || true
 fi
@@ -47,4 +51,4 @@ fi
 
 echo
 echo "BearWave is installed for the current user."
-echo "Launch it from the Omarchy bar or application menu."
+echo "Open the BearWave app widget from the Omarchy bar."
