@@ -4,11 +4,9 @@
 #include <QApplication>
 #include <QCommandLineOption>
 #include <QCommandLineParser>
-#include <QCoreApplication>
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
 #include <QDBusMessage>
-#include <QDBusReply>
 #include <QDebug>
 #include <QFile>
 #include <QFont>
@@ -20,7 +18,6 @@
 #include <QQuickStyle>
 #include <QQuickWindow>
 #include <QStyleHints>
-#include <QTextStream>
 #include <QTranslator>
 
 #include <memory>
@@ -49,36 +46,6 @@ void configureOmarchyChrome()
 
 int main(int argc, char *argv[])
 {
-    for (int index = 1; index < argc; ++index) {
-        if (QString::fromLocal8Bit(argv[index]) != QStringLiteral("--widget-state")) {
-            continue;
-        }
-
-        QCoreApplication stateApp(argc, argv);
-        QDBusConnection stateBus = QDBusConnection::sessionBus();
-        const bool stateServiceRunning = stateBus.isConnected()
-            && stateBus.interface()
-            && stateBus.interface()->isServiceRegistered(
-                QStringLiteral("org.mpris.MediaPlayer2.bearwave"));
-        if (!stateServiceRunning) {
-            QTextStream(stdout) << "{\"running\":false}\n";
-            return 0;
-        }
-
-        QDBusMessage stateCall = QDBusMessage::createMethodCall(
-            QStringLiteral("org.mpris.MediaPlayer2.bearwave"),
-            QStringLiteral("/org/mpris/MediaPlayer2"),
-            QStringLiteral("de.nerdbear.BearWave.Control"),
-            QStringLiteral("GetWidgetState"));
-        const QDBusReply<QString> stateReply = stateBus.call(stateCall);
-        if (!stateReply.isValid()) {
-            QTextStream(stdout) << "{\"running\":false}\n";
-            return 1;
-        }
-        QTextStream(stdout) << stateReply.value() << '\n';
-        return 0;
-    }
-
     const DesktopEnvironment::Type desktop = DesktopEnvironment::detect();
     configureOmarchyChrome();
 
@@ -116,20 +83,7 @@ int main(int argc, char *argv[])
         QStringLiteral("no-tray"),
         QStringLiteral("Disable the system tray icon (used by the Omarchy bar plugin)"));
     commandLine.addOption(noTrayOption);
-    const QCommandLineOption backgroundOption(
-        QStringLiteral("background"),
-        QStringLiteral("Run as the invisible BearWave widget playback service"));
-    commandLine.addOption(backgroundOption);
-    const QCommandLineOption widgetStateOption(
-        QStringLiteral("widget-state"),
-        QStringLiteral("Print the running widget service state as compact JSON and exit"));
-    commandLine.addOption(widgetStateOption);
     commandLine.process(app);
-
-    QDBusConnection sessionBus = QDBusConnection::sessionBus();
-    const bool serviceRunning = sessionBus.isConnected()
-        && sessionBus.interface()
-        && sessionBus.interface()->isServiceRegistered(QStringLiteral("org.mpris.MediaPlayer2.bearwave"));
 
     AppSettings appSettings;
     QLocale appLocale = QLocale::system();
@@ -155,10 +109,8 @@ int main(int argc, char *argv[])
     }
     QLocale::setDefault(appLocale);
 
-    if (serviceRunning) {
-        if (commandLine.isSet(backgroundOption)) {
-            return 0;
-        }
+    QDBusConnection sessionBus = QDBusConnection::sessionBus();
+    if (sessionBus.isConnected() && sessionBus.interface() && sessionBus.interface()->isServiceRegistered(QStringLiteral("org.mpris.MediaPlayer2.bearwave"))) {
         QDBusMessage call = QDBusMessage::createMethodCall(
             QStringLiteral("org.mpris.MediaPlayer2.bearwave"),
             QStringLiteral("/org/mpris/MediaPlayer2"),
@@ -252,16 +204,12 @@ int main(int argc, char *argv[])
         mprisPlayer->publishState();
     }
 
-    if (commandLine.isSet(backgroundOption)) {
-        mainWindow->hide();
-    } else {
-        mainWindow->show();
-        mainWindow->raise();
-        mainWindow->requestActivate();
-    }
+    mainWindow->show();
+    mainWindow->raise();
+    mainWindow->requestActivate();
 
     std::unique_ptr<SystemTrayManager> trayManager;
-    if (!commandLine.isSet(noTrayOption) && !commandLine.isSet(backgroundOption)) {
+    if (!commandLine.isSet(noTrayOption)) {
         trayManager = std::make_unique<SystemTrayManager>(&backend, mainWindow, &app);
     }
 

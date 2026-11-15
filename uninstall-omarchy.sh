@@ -18,6 +18,6 @@ if command -v gtk-update-icon-cache >/dev/null 2>&1; then
   gtk-update-icon-cache -f -t "${BEARWAVE_PREFIX}/share/icons/hicolor" >/dev/null 2>&1 || true
 fi
 
-echo "The locally installed BearWave widget service was removed."
+echo "The locally installed BearWave application was removed."
 echo "To remove the bar plugin too, run:"
 echo "  omarchy plugin remove de.nerdbear.bearwave"

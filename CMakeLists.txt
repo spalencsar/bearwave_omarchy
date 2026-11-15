@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-project(bearwave VERSION 1.4.0 LANGUAGES CXX)
+project(bearwave VERSION 1.3.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -20,6 +20,14 @@ if(BEARWAVE_BUILD_TESTS)
     enable_testing()
     add_subdirectory(tests)
 endif()
+
+# Configure and install desktop file with correct binary path
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/de.nerdbear.bearwave.desktop.in
+    ${CMAKE_CURRENT_BINARY_DIR}/de.nerdbear.bearwave.desktop
+    @ONLY
+)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/de.nerdbear.bearwave.desktop DESTINATION share/applications)
 
 # Install app icon
 install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/assets/app/bearwave.svg DESTINATION share/icons/hicolor/scalable/apps RENAME de.nerdbear.bearwave.svg)

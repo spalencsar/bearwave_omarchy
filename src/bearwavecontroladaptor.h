@@ -5,7 +5,6 @@
 #define BEARWAVECONTROLADAPTOR_H
 
 #include <QDBusAbstractAdaptor>
-#include <QString>
 #include <QVariantList>
 
 class RadioBackend;
@@ -21,7 +20,6 @@ public:
 public slots:
     QVariantList GetFavorites() const;
     QVariantList GetRecentStations() const;
-    QString GetWidgetState() const;
     bool PlayFavoriteByUuid(const QString &uuid, const QString &urlResolved = QString());
     bool PlayRecentByUuid(const QString &uuid, const QString &urlResolved = QString());
     bool HasNext() const;
