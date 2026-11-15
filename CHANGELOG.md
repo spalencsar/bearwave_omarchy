@@ -38,6 +38,8 @@ Omarchy-only desktop radio: split backend, list-first UI, live bar plugin.
 - Quick-filter chips and the Search Results sidebar row are gone. US, GB, and
   FR sit under Netherlands; World stays in the sidebar. Search stays in the
   field and then replaces the current list.
+- README screenshots show the 1.4.0 German list UI, the BearWave wordmark,
+  and the Omarchy bar with MPRIS now-playing.
 - Add station is the sidebar footer plus (and the empty-state button on My
   stations).
 - Station rows: click plays, current row uses an accent rail, bitrate on the
