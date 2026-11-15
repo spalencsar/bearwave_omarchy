@@ -1,4 +1,4 @@
-find_package(Qt6 REQUIRED COMPONENTS Test)
+find_package(Qt6 REQUIRED COMPONENTS Qml Test)
 
 set(BEARWAVE_TEST_ENV
     QT_QPA_PLATFORM=offscreen
@@ -8,6 +8,9 @@ set(BEARWAVE_TEST_ENV
 set(TEST_SOURCES
     radiobackend_playback_test.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../src/radiobackend.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../src/stationidentity.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../src/stationlibrary.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../src/stationcatalog.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../src/radiostation.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../src/countrynames.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../src/stationimagecache.cpp
@@ -92,18 +95,17 @@ target_link_libraries(country_names_test PRIVATE Qt6::Core Qt6::Test)
 
 add_test(NAME country_names_test COMMAND country_names_test)
 
-add_executable(appsettings_test
-    appsettings_test.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/../src/appsettings.cpp
+add_executable(bar_model_test
+    bar_model_test.cpp
 )
 
-target_include_directories(appsettings_test PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/../src
+target_compile_definitions(bar_model_test PRIVATE
+    BEARWAVE_SOURCE_DIR="${CMAKE_SOURCE_DIR}"
 )
 
-target_link_libraries(appsettings_test PRIVATE Qt6::Core Qt6::Test)
+target_link_libraries(bar_model_test PRIVATE Qt6::Qml Qt6::Test)
 
-add_test(NAME appsettings_test COMMAND appsettings_test)
+add_test(NAME bar_model_test COMMAND bar_model_test)
 
 add_executable(desktop_environment_test
     desktop_environment_test.cpp

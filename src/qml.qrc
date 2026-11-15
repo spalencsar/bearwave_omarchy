@@ -8,10 +8,8 @@
         <file>qml/components/AppButton.qml</file>
         <file>qml/components/SidebarNavigation.qml</file>
         <file>qml/components/SearchToolbar.qml</file>
-        <file>qml/components/QuickFilters.qml</file>
         <file>qml/components/StationCard.qml</file>
         <file>qml/components/StationLogo.qml</file>
-        <file>qml/components/StationDetailPanel.qml</file>
         <file>qml/components/WorldCategoryHeader.qml</file>
         <file>qml/components/WorldCategories.qml</file>
         <file>qml/components/PlayerBar.qml</file>

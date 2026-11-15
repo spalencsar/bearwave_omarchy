@@ -11,41 +11,10 @@ Dialog {
     id: root
 
     required property bool compactMode
-    required property var languageSettings
     required property string changelogDocument
     property string appVersion: Qt.application.version
     property string buildId: "?"
     property bool showingChangelog: false
-    readonly property var languageOptions: [
-        {
-            code: "system",
-            label: qsTr("System default")
-        },
-        {
-            code: "de",
-            label: "Deutsch"
-        },
-        {
-            code: "en",
-            label: "English"
-        },
-        {
-            code: "nl",
-            label: "Nederlands"
-        },
-        {
-            code: "ru",
-            label: "Русский"
-        }
-    ]
-
-    function languageIndex(language) {
-        for (var i = 0; i < languageOptions.length; ++i) {
-            if (languageOptions[i].code === language)
-                return i;
-        }
-        return 0;
-    }
 
     readonly property string versionLine: {
         var version = root.appVersion;
@@ -65,11 +34,14 @@ Dialog {
     standardButtons: Dialog.NoButton
     onClosed: showingChangelog = false
 
+    Overlay.modal: Rectangle {
+        color: BearTheme.scrim
+    }
+
     background: Rectangle {
-        color: BearTheme.panel
-        radius: 12
-        border.color: BearTheme.cardBorder
-        border.width: 1
+        color: BearTheme.dialog
+        radius: 0
+        border.width: 0
     }
 
     footer: Item {
@@ -103,136 +75,44 @@ Dialog {
         currentIndex: root.showingChangelog ? 1 : 0
 
         ColumnLayout {
-            spacing: 12
+            spacing: 16
 
-            Rectangle {
-                Layout.fillWidth: true
-                Layout.preferredHeight: 142
-                radius: 10
-                color: BearTheme.panelAlt
-                border.color: BearTheme.cardBorder
+            Image {
+                Layout.alignment: Qt.AlignHCenter
+                Layout.preferredWidth: root.compactMode ? 260 : 340
+                Layout.preferredHeight: root.compactMode ? 117 : 153
+                source: "qrc:/assets/app/bearwave_line.png"
+                fillMode: Image.PreserveAspectFit
+                smooth: true
+                mipmap: true
+                sourceSize.width: 446
+                sourceSize.height: 200
+                Accessible.name: "BearWave"
+            }
 
-                RowLayout {
-                    anchors.fill: parent
-                    anchors.margins: 18
-                    spacing: 20
+            ColumnLayout {
+                Layout.alignment: Qt.AlignHCenter
+                spacing: 4
 
-                    Image {
-                        Layout.preferredWidth: 104
-                        Layout.preferredHeight: 104
-                        sourceSize.width: 208
-                        sourceSize.height: 208
-                        source: "qrc:/assets/app/bearwave.png"
-                        fillMode: Image.PreserveAspectFit
-                        smooth: true
-                        mipmap: true
-                    }
+                Label {
+                    Layout.alignment: Qt.AlignHCenter
+                    text: root.versionLine
+                    color: BearTheme.textMuted
+                    font.pixelSize: 12
+                }
 
-                    ColumnLayout {
-                        Layout.fillWidth: true
-                        spacing: 3
-
-                        Label {
-                            Layout.fillWidth: true
-                            text: qsTr("BearWave")
-                            color: BearTheme.textMain
-                            font.bold: true
-                            font.pixelSize: 28
-                        }
-
-                        Label {
-                            Layout.fillWidth: true
-                            text: qsTr("Desktop internet radio")
-                            color: BearTheme.accent
-                            font.pixelSize: 14
-                            font.bold: true
-                        }
-
-                        Label {
-                            Layout.fillWidth: true
-                            text: qsTr("Native Qt 6 internet radio for Omarchy and Hyprland.")
-                            color: BearTheme.textMuted
-                            font.pixelSize: 12
-                            wrapMode: Text.WordWrap
-                        }
-
-                        Label {
-                            Layout.fillWidth: true
-                            Layout.topMargin: 5
-                            text: root.versionLine
-                            color: BearTheme.accent
-                            font.pixelSize: 12
-                        }
-
-                        Label {
-                            Layout.fillWidth: true
-                            text: qsTr("Author: Sebastian Palencsár")
-                            color: BearTheme.textMain
-                            font.pixelSize: 12
-                        }
-                    }
+                Label {
+                    Layout.alignment: Qt.AlignHCenter
+                    text: qsTr("Author: Sebastian Palencsár")
+                    color: BearTheme.textMuted
+                    font.pixelSize: 12
                 }
             }
 
-            Rectangle {
-                Layout.fillWidth: true
-                Layout.preferredHeight: root.languageSettings && root.languageSettings.restartRequired ? 148 : 116
-                radius: 10
-                color: BearTheme.panelAlt
-                border.color: BearTheme.cardBorder
-
-                ColumnLayout {
-                    anchors.fill: parent
-                    anchors.margins: 14
-                    spacing: 8
-
-                    RowLayout {
-                        Layout.fillWidth: true
-                        spacing: 12
-
-                        Label {
-                            Layout.fillWidth: true
-                            text: qsTr("Language")
-                            color: BearTheme.textMain
-                            font.bold: true
-                        }
-
-                        ComboBox {
-                            id: languageCombo
-                            Layout.preferredWidth: 190
-                            model: root.languageOptions
-                            textRole: "label"
-                            currentIndex: root.languageIndex(root.languageSettings ? root.languageSettings.language : "system")
-                            enabled: root.languageSettings !== null
-                            onActivated: function (index) {
-                                if (root.languageSettings) {
-                                    root.languageSettings.language = root.languageOptions[index].code;
-                                }
-                            }
-                        }
-                    }
-
-                    Label {
-                        Layout.fillWidth: true
-                        visible: root.languageSettings && root.languageSettings.restartRequired
-                        text: qsTr("Restart BearWave to apply the language change.")
-                        color: BearTheme.accent
-                        font.pixelSize: 11
-                        wrapMode: Text.WordWrap
-                    }
-
-                    Rectangle {
-                        Layout.fillWidth: true
-                        Layout.preferredHeight: 1
-                        color: BearTheme.cardBorder
-                    }
-
-                    AppButton {
-                        Layout.alignment: Qt.AlignRight
-                        text: qsTr("What's New")
-                        onClicked: root.showingChangelog = true
-                    }
-                }
+            AppButton {
+                Layout.alignment: Qt.AlignHCenter
+                text: qsTr("What's New")
+                onClicked: root.showingChangelog = true
             }
 
             ColumnLayout {
@@ -259,9 +139,9 @@ Dialog {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
                     Layout.minimumHeight: 150
-                    radius: 10
-                    color: BearTheme.panelAlt
-                    border.color: BearTheme.cardBorder
+                    radius: 0
+                    color: BearTheme.dialogAlt
+                    border.width: 0
 
                     ScrollView {
                         id: licenseScroll
@@ -312,9 +192,9 @@ Dialog {
             Rectangle {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                radius: 10
-                color: BearTheme.panelAlt
-                border.color: BearTheme.cardBorder
+                radius: 0
+                color: BearTheme.dialogAlt
+                border.width: 0
 
                 ScrollView {
                     id: changelogScroll

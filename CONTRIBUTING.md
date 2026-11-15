@@ -36,6 +36,10 @@ If you changed QML:
 qmllint src/qml/Main.qml src/qml/components/*.qml src/qml/theme/BearTheme.qml
 ```
 
+The UI is the Omarchy layout only: sidebar, wide station list, search toolbar,
+and a full-width bottom player. Compact mode hides the sidebar below 760px.
+There are no inner frames; Hyprland draws the outer window border.
+
 ### Layout modes to smoke-test after UI changes
 
 Test the wide Omarchy station list with its bottom player and the compact
@@ -57,6 +61,21 @@ Tests must keep their XDG configuration and cache state isolated. Never run
 fixtures against or leave fixture data in a contributor's real
 `~/.config/bearwave` profile.
 
+### Live Omarchy bar plugin
+
+The shell loads `~/.config/omarchy/plugins/de.nerdbear.bearwave/`, not this
+checkout. Sync the bar files into that real directory (not a symlink — the
+shell's inotify watcher does not follow one, and it caches QML by URL):
+
+```bash
+./scripts/link-omarchy-plugin.sh
+omarchy restart shell
+```
+
+After the first sync, saving files under the plugin directory hot-reloads.
+Saving only in this checkout does not. Run the script again after widget
+edits, then restart the shell if the bar still shows the previous widget.
+
 ## Change Guidelines
 
 - Follow the existing style in each file.
@@ -68,7 +87,8 @@ fixtures against or leave fixture data in a contributor's real
   permissions, or explicit plain-text rendering at QML display boundaries.
 - Preserve MPRIS behavior and user state compatibility.
 - When changing resources, register them in `src/qml.qrc`.
-- When changing the About page, keep the full GPL text resource visible and keep third-party technology notes accurate.
+- When changing the About page, keep the BearWave wordmark, the full GPL text,
+  and accurate third-party technology notes.
 
 ## Manual Checks
 
@@ -82,7 +102,7 @@ Please smoke-test the area you changed when possible:
 - favorites persist across restart
 - resume restores last station and volume
 - tray and MPRIS behavior still work
-- About page opens from sidebar/compact navigation, social links work, and the GPL license text is scrollable
+- About page opens from the sidebar footer, the wordmark is visible, and the GPL license text is scrollable
 
 Record important local changes and verification commands in the changelog or
 the handoff notes for this working directory.

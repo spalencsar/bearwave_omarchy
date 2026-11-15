@@ -9,12 +9,13 @@
 #include <QVariantMap>
 #include <QVariantList>
 
-#include "radiobrowser.h"
 #include "bearplayer.h"
 
 class RadioStation;
 class StationArtworkService;
+class StationCatalog;
 class StationImageCache;
+class StationLibrary;
 
 class RadioBackend : public QObject
 {
@@ -30,6 +31,7 @@ class RadioBackend : public QObject
     Q_PROPERTY(bool canResumeLastStation READ canResumeLastStation NOTIFY resumeStateChanged)
     Q_PROPERTY(QString lastStationName READ lastStationName NOTIFY resumeStateChanged)
     Q_PROPERTY(QString filterQuery READ filterQuery WRITE setFilterQuery NOTIFY filterQueryChanged)
+    Q_PROPERTY(QString sortMode READ sortMode NOTIFY sortModeChanged)
     Q_PROPERTY(QVariantList recentStations READ recentStations NOTIFY listsChanged)
     Q_PROPERTY(QVariantMap selectedStation READ selectedStation NOTIFY selectedStationChanged)
     Q_PROPERTY(QString currentStationUuid READ currentStationUuid NOTIFY currentStationChanged)
@@ -44,18 +46,19 @@ public:
     QList<QObject*> stations() const;
     QList<QObject*> favoriteStations() const;
     QList<QObject*> manualStations() const;
-    QVariantList countryPickerOptions() const { return m_countryPickerOptions; }
+    QVariantList countryPickerOptions() const;
     QVariantList recentStations() const;
     QVariantMap selectedStation() const { return m_selectedStation; }
     QObject* currentStation() const;
     QString currentStationUuid() const { return m_currentStationUuid; }
     QString currentStationUrl() const { return m_currentStationUrl; }
     BearPlayer* player() const { return m_player; }
-    bool loading() const { return m_loading; }
+    bool loading() const;
     QString lastError() const { return m_lastError; }
-    bool canResumeLastStation() const { return !m_lastStationUrl.isEmpty(); }
-    QString lastStationName() const { return m_lastStationName; }
-    QString filterQuery() const { return m_filterQuery; }
+    bool canResumeLastStation() const;
+    QString lastStationName() const;
+    QString filterQuery() const;
+    QString sortMode() const;
     int stationImageRevision() const;
 
     Q_INVOKABLE void setFilterQuery(const QString &query);
@@ -101,7 +104,7 @@ public:
     Q_INVOKABLE int stationLogoPaletteIndex(const QString &stationKey,
                                             int paletteSize) const;
 
-    QVariantList countries() const { return m_countries; }
+    QVariantList countries() const;
 
 signals:
     void stationsChanged();
@@ -112,67 +115,40 @@ signals:
     void lastErrorChanged();
     void resumeStateChanged();
     void filterQueryChanged();
+    void sortModeChanged();
     void currentStationChanged();
     void selectedStationChanged();
     void raiseRequested();
     void countriesChanged();
     void stationImageRevisionChanged();
 
-private slots:
-    void onStationsLoaded(const QList<RadioStation*> &stations);
-    void onCountriesLoaded(const QVariantList &countries);
-
 private:
-    RadioBrowser *m_radioBrowser = nullptr;
+    StationLibrary *m_library = nullptr;
+    StationCatalog *m_catalog = nullptr;
     StationImageCache *m_stationImageCache = nullptr;
     StationArtworkService *m_stationArtworkService = nullptr;
     BearPlayer *m_player = nullptr;
-    QList<RadioStation*> m_stations;
-    QList<RadioStation*> m_filteredStations;
-    QList<RadioStation*> m_favorites;
-    QList<RadioStation*> m_manualStations;
-    QVariantList m_countryPickerOptions;
     int m_currentIndex = -1;
     bool m_currentFromFavorites = false;
     bool m_currentFromManual = false;
     bool m_currentFromHistory = false;
     bool m_standalonePlayback = false;
-    bool m_loading = false;
     QString m_lastError;
-    QString m_lastStationName;
-    QString m_lastStationUrl;
-    QString m_filterQuery;
-    QVariantList m_recentStations;
     QVariantMap m_selectedStation;
     QString m_currentStationUuid;
     QString m_currentStationUrl;
-    QVariantList m_countries;
-    bool m_currentLoadSatisfied = false;
 
     void setupConnections();
-    void beginLoad();
-    void loadFavorites();
-    void saveFavorites() const;
-    void loadManualStations();
-    void saveManualStations() const;
-    void buildCountryPickerOptions();
-    void loadState();
-    void saveState() const;
-    void setLoading(bool loading);
     void setLastError(const QString &error);
     QList<RadioStation*> currentList() const;
-    RadioStation *stationForVisibleIndex(int index) const;
-    void rebuildFilteredStations(bool emitFilterSignal = true);
-    void recordRecentStation(const QVariantMap &stationData);
     void playCurrentSelection();
     void playHistoryAtIndex(int index, bool updateRecent);
     bool startPlayback(const QString &url, const QString &name);
     void syncStationListIndex();
     void setSelectedStation(const QVariantMap &station);
-    static QVariantMap toVariantMap(const RadioStation *station);
-    static bool matchesStation(const RadioStation *station, const QString &uuid, const QString &urlResolved);
-    static bool matchesStationMap(const QVariantMap &station, const QString &uuid, const QString &urlResolved);
-    static int recentStationIndex(const QVariantList &recent, const QString &uuid, const QString &urlResolved);
+    void savePlaybackState();
+    void onCatalogStationsChanged();
+    void onCatalogReloaded();
 };
 
 #endif

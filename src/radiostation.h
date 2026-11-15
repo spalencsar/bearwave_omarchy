@@ -19,6 +19,7 @@ class RadioStation : public QObject
     Q_PROPERTY(QString homepage READ homepage CONSTANT)
     Q_PROPERTY(QString favicon READ favicon CONSTANT)
     Q_PROPERTY(QString country READ country CONSTANT)
+    Q_PROPERTY(QString countryCode READ countryCode CONSTANT)
     Q_PROPERTY(QString tags READ tags CONSTANT)
     Q_PROPERTY(QString codec READ codec CONSTANT)
     Q_PROPERTY(int bitrate READ bitrate CONSTANT)
@@ -49,6 +50,9 @@ public:
 
     QString country() const;
     void setCountry(const QString &country);
+
+    QString countryCode() const;
+    void setCountryCode(const QString &countryCode);
 
     QString tags() const;
     void setTags(const QString &tags);
@@ -81,6 +85,7 @@ private:
     QString m_homepage;
     QString m_favicon;
     QString m_country;
+    QString m_countryCode;
     QString m_tags;
     QString m_codec;
     int m_bitrate = 0;

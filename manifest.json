@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "de.nerdbear.bearwave",
   "name": "BearWave",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "author": "Sebastian Palencsar",
   "license": "GPL-3.0-or-later",
   "description": "Omarchy-native internet radio with a theme-aware bar control.",

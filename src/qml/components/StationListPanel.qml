@@ -22,6 +22,9 @@ Item {
         case "top": return qsTr("Top stations")
         case "german": return qsTr("Germany")
         case "dutch": return qsTr("Netherlands")
+        case "us": return qsTr("United States")
+        case "gb": return qsTr("United Kingdom")
+        case "fr": return qsTr("France")
         case "world": return qsTr("World")
         case "search": return qsTr("Search results")
         case "favorites": return qsTr("Favorites")
@@ -33,6 +36,13 @@ Item {
                 return qsTr("Stations")
             return qsTr("Stations")
         }
+    }
+
+    readonly property bool catalogSortable: {
+        var page = app.currentPage
+        return page === "top" || page === "german" || page === "dutch"
+                || page === "us" || page === "gb" || page === "fr"
+                || page === "search" || page === "world"
     }
 
     readonly property string pageSubtitle: {
@@ -61,28 +71,58 @@ Item {
             Layout.rightMargin: 6
             spacing: 10
 
-            ColumnLayout {
+            Label {
                 Layout.fillWidth: true
-                spacing: 2
+                text: root.pageTitle
+                color: BearTheme.textMain
+                font.pixelSize: 16
+                font.bold: true
+                elide: Text.ElideRight
+            }
 
-                Label {
-                    Layout.fillWidth: true
-                    text: root.pageTitle
-                    color: BearTheme.textMain
-                    font.pixelSize: 16
-                    font.bold: true
-                    elide: Text.ElideRight
+            Label {
+                visible: root.pageSubtitle.length > 0
+                text: root.pageSubtitle
+                color: BearTheme.textMuted
+                font.pixelSize: 12
+            }
+
+            RowLayout {
+                visible: root.catalogSortable
+                spacing: 4
+
+                AppButton {
+                    text: qsTr("Name")
+                    font.pixelSize: 11
+                    leftPadding: 10
+                    rightPadding: 10
+                    topPadding: 5
+                    bottomPadding: 5
+                    highlighted: app.backend && app.backend.sortMode === "name"
+                    onClicked: if (app.backend) app.backend.sortStations("name")
                 }
-                Label {
-                    Layout.fillWidth: true
-                    visible: root.pageSubtitle.length > 0
-                    text: root.pageSubtitle
-                    color: BearTheme.textMuted
-                    font.pixelSize: 12
+                AppButton {
+                    text: qsTr("Bitrate")
+                    font.pixelSize: 11
+                    leftPadding: 10
+                    rightPadding: 10
+                    topPadding: 5
+                    bottomPadding: 5
+                    highlighted: app.backend && app.backend.sortMode === "bitrate"
+                    onClicked: if (app.backend) app.backend.sortStations("bitrate")
+                }
+                AppButton {
+                    text: qsTr("Votes")
+                    font.pixelSize: 11
+                    leftPadding: 10
+                    rightPadding: 10
+                    topPadding: 5
+                    bottomPadding: 5
+                    highlighted: app.backend && app.backend.sortMode === "votes"
+                    onClicked: if (app.backend) app.backend.sortStations("votes")
                 }
             }
 
-            // Loading hint
             Label {
                 visible: app.backend && app.backend.loading
                 text: qsTr("Loading…")
@@ -101,12 +141,10 @@ Item {
                 id: stationList
                 anchors.fill: parent
                 clip: true
-                // Gap between cards — no shared edge with the stage panel.
-                spacing: BearTheme.isOmarchy ? 0 : 10
+                spacing: 0
                 model: app.activeModel()
                 visible: count > 0 && !root.showEmptyState
                 boundsBehavior: Flickable.StopAtBounds
-                // Inset content so card borders never kiss the right stage edge.
                 leftMargin: 2
                 rightMargin: 14
                 topMargin: 2
@@ -193,7 +231,7 @@ Item {
                         if (app.currentPage === "history")
                             return qsTr("Play some stations to build history")
                         if (app.currentPage === "mystations")
-                            return qsTr("Add a stream URL via + or “Add station”")
+                            return qsTr("Add a stream URL via +")
                         if (app.currentPage === "favorites")
                             return qsTr("Star stations while browsing to save them here")
                         if (app.currentPage === "search")

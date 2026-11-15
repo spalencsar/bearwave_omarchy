@@ -14,15 +14,10 @@ ApplicationWindow {
     title: qsTr("BearWave")
     // Hyprland supplies the outer border and compositor blur.
     flags: Qt.Window
-    color: BearTheme.isOmarchy ? "transparent" : BearTheme.bgA
+    color: "transparent"
     readonly property int preferredWindowWidth: 1440
     // Sidebar hides only when very narrow.
     readonly property int sidebarLayoutThreshold: 760
-    // Detail stage needs ~420px width; hide below this so list stays usable.
-    readonly property int detailLayoutThreshold: 1240
-    // Transport dock in the stage needs vertical room (cover + track + dock).
-    // At ~900px height (e.g. MacBook Air 2015) keep a bottom player bar instead.
-    readonly property int stageDockHeightThreshold: 960
     width: Math.max(minimumWidth,
                     Math.min(preferredWindowWidth,
                              Screen.desktopAvailableWidth > 0
@@ -47,14 +42,7 @@ ApplicationWindow {
     readonly property string appVersion: (typeof bearwaveVersion !== "undefined" ? ("" + bearwaveVersion) : Qt.application.version)
     readonly property string appBuildId: (typeof bearwaveBuildId !== "undefined" ? ("" + bearwaveBuildId) : "?")
     readonly property string appChangelog: (typeof bearwaveChangelog !== "undefined" ? ("" + bearwaveChangelog) : "")
-    // No sidebar (very narrow).
     property bool compactMode: width < sidebarLayoutThreshold
-    // Full three-column layout (sidebar + list + detail).
-    readonly property bool showDetailPanel: !BearTheme.isOmarchy && width >= detailLayoutThreshold
-    // Dock transport in the right stage only when wide enough *and* tall enough.
-    readonly property bool stageTransportDock: showDetailPanel && height >= stageDockHeightThreshold
-    // Wrapped/flow filters when the one-line filter row would clip.
-    readonly property bool useFlowFilters: BearTheme.isOmarchy ? width < 1050 : !showDetailPanel
     property real contentOpacity: 1.0
     property string activeQuickFilter: ""
     property string selectedWorldCategory: ""
@@ -123,17 +111,6 @@ ApplicationWindow {
         }
     }
 
-    function pageTitle() {
-        switch (currentPage) {
-        case "favorites": return qsTr("Favorites")
-        case "mystations": return qsTr("My stations")
-        case "history": return qsTr("Recent")
-        case "world": return qsTr("World radio")
-        case "search": return qsTr("Search results")
-        default: return qsTr("Stations")
-        }
-    }
-
     onCurrentPageChanged: {
         contentOpacity = 0.85
         contentFadeRestart.restart()
@@ -170,9 +147,7 @@ ApplicationWindow {
     }
 
     PlayerBar {
-        id: omarchyPlayer
-        visible: BearTheme.isOmarchy
-        height: visible ? implicitHeight : 0
+        id: playerBar
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
@@ -180,19 +155,18 @@ ApplicationWindow {
         anchors.rightMargin: 18
         anchors.bottomMargin: 18
         app: root
-        transportOnly: false
     }
 
     SidebarNavigation {
         id: sidebar
-        width: root.compactMode ? 0 : (BearTheme.isOmarchy ? 248 : 228)
+        width: root.compactMode ? 0 : 248
         visible: !root.compactMode
         anchors.left: parent.left
         anchors.top: parent.top
-        anchors.bottom: BearTheme.isOmarchy ? omarchyPlayer.top : parent.bottom
-        anchors.leftMargin: BearTheme.isOmarchy ? 18 : 0
-        anchors.topMargin: BearTheme.isOmarchy ? 18 : 0
-        anchors.bottomMargin: BearTheme.isOmarchy ? 14 : 0
+        anchors.bottom: playerBar.top
+        anchors.leftMargin: 18
+        anchors.topMargin: 18
+        anchors.bottomMargin: 14
         app: root
     }
 
@@ -201,34 +175,20 @@ ApplicationWindow {
         anchors.left: root.compactMode ? parent.left : sidebar.right
         anchors.right: parent.right
         anchors.top: parent.top
-        anchors.bottom: BearTheme.isOmarchy ? omarchyPlayer.top : parent.bottom
-        anchors.leftMargin: BearTheme.isOmarchy ? 14 : 0
-        anchors.rightMargin: BearTheme.isOmarchy ? 18 : 0
-        anchors.topMargin: BearTheme.isOmarchy ? 18 : 0
-        anchors.bottomMargin: BearTheme.isOmarchy ? 14 : 0
+        anchors.bottom: playerBar.top
+        anchors.leftMargin: 14
+        anchors.rightMargin: 18
+        anchors.topMargin: 18
+        anchors.bottomMargin: 14
 
         Rectangle {
             id: topToolbar
-            // Size to header content so Flow filters are never clipped.
             height: headerContent.implicitHeight + 22
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.top: parent.top
-            // Seamless frosted-glass workspace header.
-            color: BearTheme.isOmarchy ? BearTheme.panel : BearTheme.bgA
-            border.width: BearTheme.isOmarchy ? 1 : 0
-            border.color: BearTheme.cardBorder
+            color: "transparent"
             clip: true
-
-            // Soft separator under header
-            Rectangle {
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
-                height: 1
-                color: BearTheme.cardBorder
-                opacity: 0.55
-            }
 
             ColumnLayout {
                 id: headerContent
@@ -247,27 +207,6 @@ ApplicationWindow {
                     compactMode: root.compactMode
                 }
 
-                ColumnLayout {
-                    Layout.fillWidth: true
-                    visible: BearTheme.isOmarchy && !root.compactMode
-                    spacing: 1
-
-                    Label {
-                        text: root.pageTitle()
-                        color: BearTheme.textMain
-                        font.pixelSize: 16
-                        font.bold: true
-                    }
-
-                    Label {
-                        text: qsTr("Internet radio") + "  ·  "
-                              + root.activeModel().length + " " + qsTr("stations")
-                        color: BearTheme.textMuted
-                        font.pixelSize: 11
-                    }
-                }
-
-                // Branding only lives in the sidebar wordmark — not repeated here.
                 RowLayout {
                     Layout.fillWidth: true
                     visible: !root.compactMode
@@ -291,13 +230,6 @@ ApplicationWindow {
                     searchTimer: searchTimer
                 }
 
-                QuickFilters {
-                    Layout.fillWidth: true
-                    app: root
-                    // Flow layout whenever the one-line filter row would clip.
-                    compactMode: root.useFlowFilters
-                }
-
                 Label {
                     Layout.fillWidth: true
                     visible: backend && backend.lastError.length > 0
@@ -309,27 +241,12 @@ ApplicationWindow {
             }
         }
 
-        // Bottom bar when stage dock is off:
-        // - no stage (narrow): full bar with station meta
-        // - stage open but short: transport-only strip
-        // Tall+wide: transport docks inside StationDetailPanel (no bottom bar).
-        PlayerBar {
-            id: playerBar
-            height: visible ? implicitHeight : 0
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
-            app: root
-            visible: !BearTheme.isOmarchy && !root.stageTransportDock
-            transportOnly: root.showDetailPanel && !root.stageTransportDock
-        }
-
         Item {
             id: contentArea
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.top: topToolbar.bottom
-            anchors.bottom: BearTheme.isOmarchy || root.stageTransportDock ? parent.bottom : playerBar.top
+            anchors.bottom: parent.bottom
             clip: true
             opacity: contentOpacity
 
@@ -337,35 +254,15 @@ ApplicationWindow {
                 NumberAnimation { duration: 180; easing.type: Easing.OutCubic }
             }
 
-            Rectangle {
+            Item {
                 id: stationArea
-                anchors.left: parent.left
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                // Gap before the stage so list chrome never abuts the right panel.
-                anchors.right: root.showDetailPanel ? detailPanel.left : parent.right
-                anchors.rightMargin: root.showDetailPanel ? 0 : 0
-                color: BearTheme.isOmarchy ? "transparent" : BearTheme.bgA
-                border.width: BearTheme.isOmarchy ? 1 : 0
-                border.color: BearTheme.cardBorder
+                anchors.fill: parent
                 clip: true
-
-                // Soft divider owned by the list column (not by card borders).
-                Rectangle {
-                    anchors.top: parent.top
-                    anchors.bottom: parent.bottom
-                    anchors.right: parent.right
-                    width: 1
-                    visible: root.showDetailPanel
-                    color: BearTheme.cardBorder
-                    opacity: 0.45
-                    z: 2
-                }
 
                 ColumnLayout {
                     anchors.fill: parent
                     anchors.leftMargin: 10
-                    anchors.rightMargin: root.showDetailPanel ? 20 : 10
+                    anchors.rightMargin: 10
                     anchors.topMargin: 10
                     anchors.bottomMargin: 10
                     spacing: 10
@@ -388,20 +285,9 @@ ApplicationWindow {
                         Layout.fillHeight: true
                         visible: currentPage === "world" && selectedWorldCategory === ""
                         app: root
-                        compactMode: root.useFlowFilters
+                        compactMode: root.width < 1050
                     }
                 }
-            }
-
-            StationDetailPanel {
-                id: detailPanel
-                width: 420
-                anchors.right: parent.right
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                visible: root.showDetailPanel
-                app: root
-                showTransportDock: root.stageTransportDock
             }
         }
     }
@@ -434,21 +320,11 @@ ApplicationWindow {
         appVersion: root.appVersion
         buildId: root.appBuildId
         changelogDocument: root.appChangelog
-        languageSettings: (typeof appLanguageSettings !== "undefined" ? appLanguageSettings : null)
     }
 
     ToastPopup {
         id: toastPopup
         window: root
-    }
-
-    Rectangle {
-        anchors.fill: parent
-        color: "transparent"
-        border.width: 1
-        border.color: BearTheme.cardBorder
-        visible: BearTheme.isOmarchy
-        z: 1000
     }
 
     Timer {

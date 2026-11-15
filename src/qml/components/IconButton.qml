@@ -40,7 +40,7 @@ Button {
     }
 
     background: Rectangle {
-        radius: control.round && !BearTheme.isOmarchy ? width / 2 : BearTheme.cornerRadius
+        radius: BearTheme.cornerRadius
         color: {
             if (control.accentFill)
                 return control.down ? Qt.darker(BearTheme.accent, 1.22)

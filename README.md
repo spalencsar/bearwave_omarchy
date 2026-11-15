@@ -5,7 +5,7 @@
 ![Desktop](https://img.shields.io/badge/desktop-Linux%20(Qt%206)-1f6feb)
 ![Qt 6](https://img.shields.io/badge/Qt-6-41cd52)
 ![License: GPL--3.0--or--later](https://img.shields.io/badge/license-GPL--3.0--or--later-lightgrey)
-![Version](https://img.shields.io/badge/version-1.3.0-blue)
+![Version](https://img.shields.io/badge/version-1.4.0-blue)
 
 BearWave is a local Qt 6 internet-radio player designed specifically for
 Omarchy and Hyprland.
@@ -42,8 +42,9 @@ up while BearWave is running.
 - ICY metadata and cover artwork
 - MPRIS media controls and desktop notifications
 - system-tray background playback
-- German, Dutch, and Russian translations
+- German, Dutch, and Russian translations (window follows the system locale)
 - Omarchy palette, typography, translucent surfaces, and compact layout
+- Omarchy bar widget over MPRIS (launch, play/pause, stop, now-playing hover)
 
 ## Requirements
 
@@ -79,6 +80,14 @@ Install it from there, or add and enable the plugin directly:
 omarchy plugin add https://github.com/spalencsar/bearwave_omarchy.git --enable
 ```
 
+When developing from a local checkout, sync the bar files into the live
+plugin directory and restart the shell so it drops the cached widget:
+
+```bash
+./scripts/link-omarchy-plugin.sh
+omarchy restart shell
+```
+
 Omarchy intentionally does not execute install hooks for plugins. On first
 click, the BearWave bar icon therefore opens the visible local installer in an
 Omarchy terminal. You can run the same installer directly:
@@ -92,8 +101,10 @@ BearWave from the checked-out source, and installs the application only for the
 current user below `~/.local`. It does not use Flatpak or the AUR.
 
 After installation, left-click the bar icon to open BearWave, middle-click to
-play or pause, and right-click to stop playback. The application is launched
-with its own tray icon disabled so the bar does not show BearWave twice.
+play or pause, and right-click to stop playback. Hover shows the current
+station and track. The bar follows BearWave over MPRIS D-Bus (no polling).
+The application is launched with its own tray icon disabled so the bar does
+not show BearWave twice.
 
 To remove the local application and then its plugin:
 
@@ -139,7 +150,7 @@ debugging outside the normal Omarchy palette.
 
 - `Space`: play or pause
 - `Ctrl+F`: focus station search
-- closing the window hides BearWave in the system tray
+- closing the window hides BearWave; the bar or tray restores it
 
 ## License
 

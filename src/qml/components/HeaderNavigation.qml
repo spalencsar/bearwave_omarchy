@@ -190,6 +190,39 @@ Item {
             }
 
             AppButton {
+                text: qsTr("US")
+                highlighted: app.currentPage === "us"
+                onClicked: {
+                    if (!app.backend) return
+                    app.currentPage = "us"
+                    app.activeQuickFilter = ""
+                    app.backend.loadByCountryCode("US")
+                }
+            }
+
+            AppButton {
+                text: qsTr("GB")
+                highlighted: app.currentPage === "gb"
+                onClicked: {
+                    if (!app.backend) return
+                    app.currentPage = "gb"
+                    app.activeQuickFilter = ""
+                    app.backend.loadByCountryCode("GB")
+                }
+            }
+
+            AppButton {
+                text: qsTr("FR")
+                highlighted: app.currentPage === "fr"
+                onClicked: {
+                    if (!app.backend) return
+                    app.currentPage = "fr"
+                    app.activeQuickFilter = ""
+                    app.backend.loadByCountryCode("FR")
+                }
+            }
+
+            AppButton {
                 text: qsTr("Favorites")
                 highlighted: app.currentPage === "favorites"
                 onClicked: showFavorites()

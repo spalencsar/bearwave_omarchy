@@ -13,19 +13,8 @@ Rectangle {
     required property var app
 
     color: BearTheme.sidebar
-    border.width: BearTheme.isOmarchy ? 1 : 0
-    border.color: BearTheme.cardBorder
+    border.width: 0
     radius: 0
-
-    Rectangle {
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        anchors.right: parent.right
-        width: 1
-        color: BearTheme.cardBorder
-        opacity: 0.55
-        visible: !BearTheme.isOmarchy
-    }
 
     function showTop() {
         if (!app.backend) return
@@ -46,6 +35,13 @@ Rectangle {
         app.currentPage = "dutch"
         app.activeQuickFilter = ""
         app.backend.loadDutchStations()
+    }
+
+    function showCountry(code, page) {
+        if (!app.backend) return
+        app.currentPage = page
+        app.activeQuickFilter = ""
+        app.backend.loadByCountryCode(code)
     }
 
     function showWorld() {
@@ -92,42 +88,19 @@ Rectangle {
         anchors.bottomMargin: 14
         spacing: 4
 
-        // Brand
-        Item {
+        Image {
             Layout.fillWidth: true
-            Layout.preferredHeight: 40
-            Layout.bottomMargin: 10
-
-            Image {
-                anchors.left: parent.left
-                anchors.verticalCenter: parent.verticalCenter
-                width: 128
-                height: 36
-                source: "qrc:/assets/app/bearwave_line.png"
-                fillMode: Image.PreserveAspectFit
-                smooth: true
-                mipmap: true
-                visible: !BearTheme.isOmarchy
-            }
-
-            Column {
-                anchors.left: parent.left
-                anchors.verticalCenter: parent.verticalCenter
-                spacing: 1
-                visible: BearTheme.isOmarchy
-
-                Label {
-                    text: "◉ BearWave"
-                    color: BearTheme.textMain
-                    font.pixelSize: 15
-                    font.bold: true
-                }
-                Label {
-                    text: qsTr("internet radio")
-                    color: BearTheme.textMuted
-                    font.pixelSize: 10
-                }
-            }
+            Layout.preferredHeight: 80
+            Layout.bottomMargin: 12
+            source: "qrc:/assets/app/bearwave_line.png"
+            fillMode: Image.PreserveAspectFit
+            horizontalAlignment: Image.AlignLeft
+            verticalAlignment: Image.AlignVCenter
+            smooth: true
+            mipmap: true
+            sourceSize.width: 446
+            sourceSize.height: 200
+            Accessible.name: "BearWave"
         }
 
         SidebarSectionLabel { text: qsTr("Browse") }
@@ -151,16 +124,28 @@ Rectangle {
             onClicked: root.showDutch()
         }
         SidebarRow {
+            text: qsTr("United States")
+            code: "US"
+            active: app.currentPage === "us"
+            onClicked: root.showCountry("US", "us")
+        }
+        SidebarRow {
+            text: qsTr("United Kingdom")
+            code: "GB"
+            active: app.currentPage === "gb"
+            onClicked: root.showCountry("GB", "gb")
+        }
+        SidebarRow {
+            text: qsTr("France")
+            code: "FR"
+            active: app.currentPage === "fr"
+            onClicked: root.showCountry("FR", "fr")
+        }
+        SidebarRow {
             text: qsTr("World")
             iconName: "globe"
             active: app.currentPage === "world"
             onClicked: root.showWorld()
-        }
-        SidebarRow {
-            text: qsTr("Search Results")
-            iconName: "search"
-            active: app.currentPage === "search"
-            onClicked: app.currentPage = "search"
         }
 
         SidebarSectionLabel {
@@ -188,12 +173,6 @@ Rectangle {
             active: app.currentPage === "history"
             badge: app.backend ? app.backend.recentStations.length : 0
             onClicked: root.showHistory()
-        }
-        SidebarRow {
-            text: qsTr("Add station")
-            iconName: "plus"
-            active: false
-            onClicked: app.addDialog.open()
         }
 
         Item { Layout.fillHeight: true }

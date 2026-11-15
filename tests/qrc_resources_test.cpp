@@ -26,7 +26,7 @@ void QrcResourcesTest::qmlModulesAreEmbedded()
     QVERIFY(QFile::exists(QStringLiteral(":/qml/components/qmldir")));
     QVERIFY(QFile::exists(QStringLiteral(":/qml/components/AppButton.qml")));
     QVERIFY(QFile::exists(QStringLiteral(":/qml/components/SidebarNavigation.qml")));
-    QVERIFY(QFile::exists(QStringLiteral(":/qml/components/StationDetailPanel.qml")));
+    QVERIFY(QFile::exists(QStringLiteral(":/qml/components/PlayerBar.qml")));
     QVERIFY(QFile::exists(QStringLiteral(":/assets/app/bearwave.svg")));
     QVERIFY(QFile::exists(QStringLiteral(":/assets/app/bearwave-symbolic.svg")));
     QVERIFY(QFile::exists(QStringLiteral(":/assets/app/bearwave.png")));
@@ -50,34 +50,16 @@ void QrcResourcesTest::remoteTextIsRenderedAsPlainText()
 
     const QByteArray stationCard =
         qmlContents(QStringLiteral(":/qml/components/StationCard.qml"));
-    QVERIFY(stationCard.contains(
-        QByteArrayLiteral("text: root.modelData.name || \"\"\n"
-                          "                    textFormat: Text.PlainText")));
-    const QByteArray stationDetail =
-        qmlContents(QStringLiteral(":/qml/components/StationDetailPanel.qml"));
-    QVERIFY(stationDetail.contains(
-        QByteArrayLiteral("text: root.stationName.length > 0 ? root.stationName"
-                          " : qsTr(\"Unknown station\")\n"
-                          "                    textFormat: Text.PlainText")));
-    QVERIFY(stationDetail.contains(
-        QByteArrayLiteral("text: root.previousTrack ? (root.previousTrack.artist"
-                          " || \"\") : \"\"\n"
-                          "                        textFormat: Text.PlainText")));
-    QVERIFY(stationDetail.contains(
-        QByteArrayLiteral("text: parent.modelData\n"
-                          "                            textFormat: Text.PlainText")));
-    QVERIFY(stationDetail.contains(
-        QByteArrayLiteral("text: root.codec.toUpperCase()\n"
-                          "                        textFormat: Text.PlainText")));
+    QVERIFY(stationCard.contains(QByteArrayLiteral("text: root.modelData.name || \"\"")));
+    QVERIFY(stationCard.contains(QByteArrayLiteral("text: root.metaLine")));
+    QVERIFY(stationCard.contains(QByteArrayLiteral("text: root.bitrateValue + \"k\"")));
+    QCOMPARE(stationCard.count(QByteArrayLiteral("textFormat: Text.PlainText")), 3);
     const QByteArray playerBar =
         qmlContents(QStringLiteral(":/qml/components/PlayerBar.qml"));
     QVERIFY(playerBar.contains(
-        QByteArrayLiteral("text: root.connectionStatusText()\n"
-                          "                textFormat: Text.PlainText")));
-    QCOMPARE(playerBar.count(
-                 QByteArrayLiteral("text: root.connectionStatusText()\n"
-                                   "                textFormat: Text.PlainText")),
-             2);
+        QByteArrayLiteral("? root.player.currentStationName : qsTr(\"No station selected\")")));
+    QVERIFY(playerBar.contains(QByteArrayLiteral("text: root.connectionStatusText()")));
+    QCOMPARE(playerBar.count(QByteArrayLiteral("textFormat: Text.PlainText")), 2);
 }
 
 QTEST_APPLESS_MAIN(QrcResourcesTest)

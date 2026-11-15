@@ -10,7 +10,7 @@ Item {
     // media: play pause stop prev next volume mute
     // ui: heart heartOutline globe copy search plus help refresh clock top radio
     property color color: "#f2f2f5"
-    property real stroke: Math.max(1.5, width * 0.09)
+    property real stroke: Math.max(2, width * 0.11)
     width: 22
     height: 22
 

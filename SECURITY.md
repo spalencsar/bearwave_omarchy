@@ -19,9 +19,9 @@ when contributing changes.
 
 | Version | Supported |
 |---------|-----------|
-| **1.3.x** (latest) | Yes |
-| 1.2.x | Prefer upgrade to 1.3.x |
-| &lt; 1.2 | No |
+| **1.4.x** (latest) | Yes |
+| 1.3.x | Prefer upgrade to 1.4.x |
+| &lt; 1.3 | No |
 
 During the public beta phase, fixes primarily target the latest code on `main`
 and the most recent published release. Users should update after a security fix

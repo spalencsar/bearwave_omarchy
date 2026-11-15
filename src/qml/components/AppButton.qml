@@ -45,9 +45,9 @@ Button {
                 return BearTheme.cardHover
             return BearTheme.control
         }
-        border.width: control.visualFocus ? 1.5 : ((BearTheme.isOmarchy || control.highlighted) ? 1 : 0)
+        border.width: control.visualFocus ? 1.5 : 1
         border.color: control.visualFocus || control.highlighted ? BearTheme.accent
-                                                               : (BearTheme.isOmarchy ? BearTheme.cardBorder : "transparent")
+                                                               : BearTheme.cardBorder
         opacity: control.enabled ? 1.0 : 0.5
     }
 }

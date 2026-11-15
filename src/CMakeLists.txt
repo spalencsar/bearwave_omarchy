@@ -3,7 +3,6 @@
 # Core application
 set(SOURCES
     main.cpp
-    appsettings.cpp
     networkurlguard.cpp
     stationimagecache.cpp
     stationartworkservice.cpp
@@ -11,6 +10,9 @@ set(SOURCES
     radiostation.cpp
     countrynames.cpp
     radiobrowser.cpp
+    stationidentity.cpp
+    stationlibrary.cpp
+    stationcatalog.cpp
     radiobackend.cpp
     bearplayer.cpp
     nowplayingstate.cpp

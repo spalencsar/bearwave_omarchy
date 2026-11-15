@@ -22,7 +22,6 @@
 
 #include <memory>
 
-#include "appsettings.h"
 #include "radiobackend.h"
 #include "mprisadaptor.h"
 #include "bearwavecontroladaptor.h"
@@ -76,7 +75,7 @@ int main(int argc, char *argv[])
     commandLine.addVersionOption();
     const QCommandLineOption languageOption(
         {QStringLiteral("l"), QStringLiteral("language")},
-        QStringLiteral("Temporarily override UI and country-name language: system, de, en, nl, or ru"),
+        QStringLiteral("Debug override for UI language: system, de, en, nl, or ru"),
         QStringLiteral("language"));
     commandLine.addOption(languageOption);
     const QCommandLineOption noTrayOption(
@@ -85,12 +84,11 @@ int main(int argc, char *argv[])
     commandLine.addOption(noTrayOption);
     commandLine.process(app);
 
-    AppSettings appSettings;
     QLocale appLocale = QLocale::system();
     const QString requestedLanguage =
         commandLine.isSet(languageOption)
         ? commandLine.value(languageOption).trimmed().toLower()
-        : appSettings.language();
+        : QStringLiteral("system");
     if (requestedLanguage != QStringLiteral("system")) {
         static const QHash<QString, QString> localeNames = {
             {QStringLiteral("de"), QStringLiteral("de_DE")},
@@ -144,21 +142,16 @@ int main(int argc, char *argv[])
     engine.addImportPath(QStringLiteral("qrc:/qml"));
 
     RadioBackend backend;
-    OmarchyThemeController omarchyTheme(desktop == DesktopEnvironment::Type::Omarchy);
+    OmarchyThemeController omarchyTheme(true);
     QFile changelogFile(QStringLiteral(":/CHANGELOG.md"));
     QString changelogText;
     if (changelogFile.open(QIODevice::ReadOnly)) {
         changelogText = QString::fromUtf8(changelogFile.readAll());
     }
     engine.rootContext()->setContextProperty("radioBackend", &backend);
-    engine.rootContext()->setContextProperty("appLanguageSettings", &appSettings);
     engine.rootContext()->setContextProperty("bearwaveVersion", QStringLiteral(BEARWAVE_VERSION));
     engine.rootContext()->setContextProperty("bearwaveBuildId", QStringLiteral(BEARWAVE_GIT_HASH));
     engine.rootContext()->setContextProperty("bearwaveChangelog", changelogText);
-    engine.rootContext()->setContextProperty(
-        QStringLiteral("bearwaveDesktopEnvironment"), DesktopEnvironment::name(desktop));
-    engine.rootContext()->setContextProperty(
-        QStringLiteral("bearwaveIsOmarchy"), desktop == DesktopEnvironment::Type::Omarchy);
     engine.rootContext()->setContextProperty(QStringLiteral("bearwaveOmarchyTheme"), &omarchyTheme);
     auto *mprisRoot = new MprisRootAdaptor(&backend, &app);
     auto *mprisPlayer = new MprisPlayerAdaptor(&backend);

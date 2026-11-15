@@ -7,15 +7,10 @@ import QtQuick.Layouts 1.15
 
 import theme 1.0
 
-// Bottom player bar:
-// - full: logo + station meta + transport (stage hidden / narrow window)
-// - transportOnly: controls only (stage still visible, too short for stage dock)
 Rectangle {
     id: root
 
     required property var app
-    // When true, stage already shows Now Playing — only transport here.
-    property bool transportOnly: false
     readonly property var player: app.backend ? app.backend.player : null
 
     function connectionStatusText() {
@@ -43,190 +38,24 @@ Rectangle {
         }
     }
 
-    implicitHeight: transportOnly ? 64 : 96
+    implicitHeight: 96
     radius: 0
     color: BearTheme.panel
-    border.color: BearTheme.cardBorder
+    border.width: 0
 
-    // —— Transport-only strip (stage open, short height) ——
-    RowLayout {
-        anchors.fill: parent
-        anchors.leftMargin: 16
-        anchors.rightMargin: 16
-        anchors.topMargin: 10
-        anchors.bottomMargin: 10
-        spacing: 12
-        visible: root.transportOnly
-
-        Label {
-            text: qsTr("Playback")
-            color: BearTheme.textMuted
-            font.pixelSize: 11
-            font.bold: true
-            font.letterSpacing: 0.6
-        }
-
-        PlayerTransport {
-            Layout.fillWidth: true
-            Layout.preferredHeight: 40
-            app: root.app
-            variant: "inline"
-            controlHeight: 36
-            controlWidth: 40
-        }
+    Rectangle {
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: parent.top
+        height: 1
+        color: BearTheme.cardBorder
+        opacity: 0.35
     }
 
-    // —— Full bar (no stage) ——
     RowLayout {
         anchors.fill: parent
         anchors.margins: 12
         spacing: 14
-        visible: !root.transportOnly && !BearTheme.isOmarchy
-
-        Item {
-            Layout.preferredWidth: 64
-            Layout.preferredHeight: 64
-
-            StationLogo {
-                anchors.fill: parent
-                app: root.app
-                stationName: app.backend && app.backend.currentStation
-                             ? (app.backend.currentStation.name || "") : ""
-                stationKey: app.backend && app.backend.currentStation
-                            ? (app.backend.currentStation.uuid
-                               || app.backend.currentStation.urlResolved
-                               || app.backend.currentStation.url
-                               || app.backend.currentStation.name
-                               || "") : ""
-                faviconUrl: app.backend && app.backend.currentStation
-                            ? (app.backend.currentStation.favicon || "") : ""
-                homepageUrl: app.backend && app.backend.currentStation
-                             ? (app.backend.currentStation.homepage || "") : ""
-                logoMargin: 8
-            }
-
-            Image {
-                id: coverImage
-                anchors.fill: parent
-                source: {
-                    if (!app.backend || !app.backend.player
-                            || !app.backend.player.currentCoverArtUrl
-                            || app.backend.player.currentCoverArtUrl === "") return ""
-                    var revision = app.backend.stationImageRevision
-                    if (revision < 0) return ""
-                    return app.backend.stationImageSource(
-                                app.backend.player.currentCoverArtUrl)
-                }
-                fillMode: Image.PreserveAspectCrop
-                smooth: true
-                asynchronous: true
-                visible: source !== "" && status === Image.Ready
-            }
-        }
-
-        ColumnLayout {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            spacing: 4
-
-            RowLayout {
-                Layout.fillWidth: true
-                spacing: 8
-
-                Label {
-                    Layout.fillWidth: true
-                    text: {
-                        if (!app.backend || !app.backend.player)
-                            return qsTr("No station selected")
-                        var name = app.backend.player.currentStationName || ""
-                        if (name.length === 0)
-                            return qsTr("No station selected")
-                        return name
-                    }
-                    textFormat: Text.PlainText
-                    color: BearTheme.textMain
-                    font.pixelSize: 14
-                    font.bold: true
-                    elide: Text.ElideRight
-                }
-
-                Rectangle {
-                    visible: app.backend && app.backend.currentStation && app.backend.currentStation.codec
-                             && app.backend.currentStation.codec !== "unknown"
-                             && app.backend.currentStation.codec !== ""
-                    height: 18
-                    width: codecLabel.implicitWidth + 12
-                    radius: BearTheme.smallRadius
-                    color: "transparent"
-                    border.color: BearTheme.accent
-                    border.width: 1
-
-                    Label {
-                        id: codecLabel
-                        anchors.centerIn: parent
-                        text: (app.backend && app.backend.currentStation && app.backend.currentStation.codec)
-                              ? app.backend.currentStation.codec.toUpperCase() : ""
-                        textFormat: Text.PlainText
-                        color: BearTheme.accent
-                        font.pixelSize: 9
-                        font.bold: true
-                    }
-                }
-
-                Rectangle {
-                    visible: app.backend && app.backend.currentStation && app.backend.currentStation.bitrate > 0
-                    height: 18
-                    width: bitrateLabel.implicitWidth + 12
-                    radius: BearTheme.smallRadius
-                    color: BearTheme.accent
-                    border.color: BearTheme.accent
-                    border.width: 1
-
-                    Label {
-                        id: bitrateLabel
-                        anchors.centerIn: parent
-                        text: (app.backend && app.backend.currentStation)
-                              ? app.backend.currentStation.bitrate + " kbps" : ""
-                        color: BearTheme.onAccent
-                        font.pixelSize: 9
-                        font.bold: true
-                    }
-                }
-            }
-
-            Label {
-                Layout.fillWidth: true
-                text: root.connectionStatusText()
-                textFormat: Text.PlainText
-                color: root.player && root.player.connectionState === "error"
-                       ? BearTheme.warn
-                       : (root.player && root.player.playing
-                          ? BearTheme.textMuted
-                          : (root.player
-                             && ["connecting", "buffering", "retrying"]
-                                .indexOf(root.player.connectionState) !== -1
-                             ? BearTheme.accent : BearTheme.textMuted))
-                font.pixelSize: 11
-                elide: Text.ElideRight
-            }
-
-            PlayerTransport {
-                Layout.fillWidth: true
-                Layout.preferredHeight: 30
-                app: root.app
-                variant: "inline"
-                controlHeight: 30
-                controlWidth: 38
-            }
-        }
-    }
-
-    // Omarchy layout: metadata left, transport centered, volume at the right.
-    RowLayout {
-        anchors.fill: parent
-        anchors.margins: 12
-        spacing: 14
-        visible: !root.transportOnly && BearTheme.isOmarchy
 
         Item {
             Layout.preferredWidth: 64
@@ -283,7 +112,6 @@ Rectangle {
             Layout.preferredWidth: Math.min(620, Math.max(360, root.width * 0.5))
             Layout.preferredHeight: 40
             app: root.app
-            variant: "inline"
             controlHeight: 36
             controlWidth: 38
         }

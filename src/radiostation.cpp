@@ -80,6 +80,16 @@ void RadioStation::setCountry(const QString &country)
     m_country = country;
 }
 
+QString RadioStation::countryCode() const
+{
+    return m_countryCode;
+}
+
+void RadioStation::setCountryCode(const QString &countryCode)
+{
+    m_countryCode = countryCode.trimmed().toUpper();
+}
+
 QString RadioStation::tags() const
 {
     return m_tags;
@@ -155,6 +165,7 @@ RadioStation* RadioStation::fromJson(const QJsonObject &json)
     station->setHomepage(json.value("homepage").toString());
     station->setFavicon(json.value("favicon").toString());
     station->setCountry(json.value("country").toString());
+    station->setCountryCode(json.value("countrycode").toString());
     station->setTags(json.value("tags").toString());
     station->setCodec(json.value("codec").toString());
     station->setBitrate(json.value("bitrate").toInt());

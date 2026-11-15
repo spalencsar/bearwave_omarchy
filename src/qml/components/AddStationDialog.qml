@@ -24,10 +24,9 @@ Dialog {
                                           ? app.backend.countryPickerOptions : []
 
     background: Rectangle {
-        color: BearTheme.panel
+        color: BearTheme.dialog
         radius: BearTheme.cornerRadius
-        border.color: BearTheme.cardBorder
-        border.width: 1
+        border.width: 0
     }
 
     Overlay.modal: Rectangle {

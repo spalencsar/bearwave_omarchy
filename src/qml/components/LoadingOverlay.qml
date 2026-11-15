@@ -21,8 +21,8 @@ Rectangle {
         width: 210
         height: 110
         radius: BearTheme.cornerRadius
-        color: BearTheme.panel
-        border.color: BearTheme.cardBorder
+        color: BearTheme.dialog
+        border.width: 0
 
         Column {
             anchors.centerIn: parent

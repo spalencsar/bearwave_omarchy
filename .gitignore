@@ -53,9 +53,6 @@ spalencsar-README.md
 ## Local caches / user state
 .cache/
 
-## Installed or generated desktop files
-org.kde.bearwave.desktop
-
 ## OS noise
 .DS_Store
 
